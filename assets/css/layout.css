@@ -21,19 +21,29 @@
   padding: 12px 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
-.header-container {
+/* Container principal do topo / navbar */
+.header-container, 
+.navbar, 
+header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  justify-content: flex-end; /* Empurra todo o conteúdo para a DIREITA */
+  align-items: center;     /* Centraliza verticalmente */
+  padding: 10px 20px;       /* Dá um espaçamento interno agradável */
+  gap: 15px;                /* Espaço entre as informações e o botão */
 }
 
+/* Garante que as informações do usuário fiquem organizadas e alinhadas em texto */
 .user-info {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-end;    /* Alinha o nome e o cargo à direita */
+  text-align: right;
+  color: #ffffff;
+}
+
+/* Ajuste opcional para o botão Sair ficar bem posicionado */
+#btn-logout {
+  margin-left: 10px;
 }
 
 .user-avatar {
@@ -60,4 +70,135 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* =================================================================== */
+/* BLOCO: DASHBOARD - ESTILIZAÇÃO DOS KPIS (INDICADORES RÁPIDOS)      */
+/* Descrição: Organiza os 3 cards do topo com visual moderno e       */
+/* responsivo para celular (Mobile-First).                             */
+/* =================================================================== */
+
+/* Container Principal do Dashboard */
+.dashboard-container {
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Grid de Indicadores: No celular empilha ou ajusta lado a lado */
+.indicadores-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+/* Estilo Base dos Cards de Indicador */
+.card-indicador {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-left: 5px solid #2e7d32; /* Borda padrão verde */
+}
+
+/* Destaque 1: Alunos Pendentes (Borda Amarelo/Laranja de Alerta) */
+.card-indicador.border-pendente {
+  border-left-color: #f57c00;
+}
+
+/* Destaque 2: Estoque Baixo (Borda Vermelha de Atenção) */
+.card-indicador.border-estoque {
+  border-left-color: #d32f2f;
+}
+
+/* Ícone grande dentro do Card */
+.ind-icon {
+  font-size: 1.8rem;
+}
+
+/* Informações de texto dentro do Card */
+.ind-info span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  display: block;
+  line-height: 1.1;
+}
+
+.ind-info p {
+  font-size: 0.8rem;
+  color: #666666;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+}
+
+/* =================================================================== */
+/* BLOCO: DASHBOARD - ESTILIZAÇÃO DO MENU DE ATALHOS (PARTE 2)         */
+/* Descrição: Transforma os 7 botões em cartões clicáveis e organizados*/
+/* em grade (grid) com foco em telas mobile.                          */
+/* =================================================================== */
+
+/* Título da Seção (Painel de Controle) */
+.dashboard-container h3 {
+  font-size: 1.1rem;
+  color: #333333;
+  margin: 15px 0 10px 0;
+}
+
+/* Grid do Menu: Cria colunas automáticas para se adaptar ao celular */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* Estilo do Botão/Cartão do Menu */
+.menu-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  width: 100%;
+}
+
+/* Efeito ao Clicar/Tocar no Botão */
+.menu-card:active {
+  transform: scale(0.98);
+  background-color: #f9f9f9;
+}
+
+/* Ícone dentro do Cartão */
+.card-icon {
+  font-size: 2rem;
+  background-color: #f0f4f8;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Textos dentro do Cartão */
+.card-info h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.card-info p {
+  margin: 3px 0 0 0;
+  font-size: 0.8rem;
+  color: #666666;
 }

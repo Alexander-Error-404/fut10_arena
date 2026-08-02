@@ -78,6 +78,118 @@
     <!-- Conteúdo Dinâmico do Dashboard e Módulos -->
     <section id="main-content" class="content-area">
       <!-- O conteúdo do Dashboard/Módulos será injetado via JavaScript -->
+
+      <!-- ================================================================= -->
+<!-- BLOCO: DASHBOARD - KPIS E PAINEL DE CONTROLE                      -->
+<!-- Descrição: Indicadores rápidos e atalhos de navegação.            -->
+<!-- ================================================================= -->
+<div id="dashboard-screen" class="dashboard-container">
+
+  <!-- SUB-BLOCO: INDICADORES RÁPIDOS (KPIS) -->
+  <div class="indicadores-container">
+
+    <!-- KPI 1: Total de Alunos Matriculados -->
+    <div class="card-indicador">
+      <div class="ind-icon">👥</div>
+      <div class="ind-info">
+        <span id="kpi-alunos">0</span>
+        <p>Alunos Matriculados</p>
+      </div>
+    </div>
+
+    <!-- KPI 2: Alunos Pendentes (Alerta Amarelo/Vermelho) -->
+    <div class="card-indicador border-pendente">
+      <div class="ind-icon">⚠️</div>
+      <div class="ind-info">
+        <span id="kpi-inadimplentes">0</span>
+        <p>Alunos Pendentes</p>
+      </div>
+    </div>
+
+    <!-- KPI 3: Estoque Baixo da Cantina -->
+    <div class="card-indicador border-estoque">
+      <div class="ind-icon">🥤</div>
+      <div class="ind-info">
+        <span id="kpi-estoque">0</span>
+        <p>Itens a Acabar (Bar)</p>
+      </div>
+    </div>
+
+  </div> <!-- Fim dos Indicadores -->
+
+  <!-- TÍTULO DA SEÇÃO DE ATALHOS -->
+  <h3>Painel de Controle</h3>
+
+  <!-- SUB-BLOCO: MENU DE ATALHOS RÁPIDOS (OS 7 BOTÕES) -->
+  <div class="menu-grid">
+
+    <!-- Atalho 1: Gerenciar Alunos (Visível para Ambos) -->
+    <button type="button" class="menu-card menu-ambos" data-target="alunos">
+      <div class="card-icon">👥</div>
+      <div class="card-info">
+        <h4>Gerenciar Alunos</h4>
+        <p>Cadastro, categorias e dados dos pais</p>
+      </div>
+    </button>
+
+    <!-- Atalho 2: Fazer Chamada (Exclusivo Vinícius) -->
+    <button type="button" class="menu-card menu-vinicius" data-target="chamada">
+      <div class="card-icon">📋</div>
+      <div class="card-info">
+        <h4>Fazer Chamada</h4>
+        <p>Controle de presença no campo</p>
+      </div>
+    </button>
+
+    <!-- Atalho 3: Barzinho / Cantina (Exclusivo Alessandra) -->
+    <button type="button" class="menu-card menu-alessandra" data-target="cantina">
+      <div class="card-icon">🍿</div>
+      <div class="card-info">
+        <h4>Barzinho / Cantina</h4>
+        <p>Vendas rápidas e controle de fiado</p>
+      </div>
+    </button>
+
+    <!-- Atalho 4: Mensalidades (Exclusivo Alessandra) -->
+    <button type="button" class="menu-card menu-alessandra" data-target="mensalidades">
+      <div class="card-icon">💰</div>
+      <div class="card-info">
+        <h4>Mensalidades</h4>
+        <p>Controle de pagamentos (Grid Jan-Dez)</p>
+      </div>
+    </button>
+
+    <!-- Atalho 5: Configurações (Exclusivo Alessandra) -->
+    <button type="button" class="menu-card menu-alessandra" data-target="configuracoes">
+      <div class="card-icon">⚙️</div>
+      <div class="card-info">
+        <h4>Configurações</h4>
+        <p>Preços, atrasos e uniformes</p>
+      </div>
+    </button>
+
+    <!-- Atalho 6: Financeiro / Caixa (Exclusivo Alessandra) -->
+    <button type="button" class="menu-card menu-alessandra" data-target="financeiro">
+      <div class="card-icon">📊</div>
+      <div class="card-info">
+        <h4>Financeiro / Caixa</h4>
+        <p>Faturamento global e lucros</p>
+      </div>
+    </button>
+
+    <!-- Atalho 7: Campo Tático (Exclusivo Vinícius) -->
+    <button type="button" class="menu-card menu-vinicius" data-target="treinos">
+      <div class="card-icon">⚽</div>
+      <div class="card-info">
+        <h4>Campo Tático</h4>
+        <p>Posicionamento e treinos interativos</p>
+      </div>
+    </button>
+
+  </div> <!-- Fim da Grid do Menu -->
+
+</div> <!-- Fim da dashboard-container -->
+
     </section>
 
   </main>
