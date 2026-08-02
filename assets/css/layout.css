@@ -1,0 +1,63 @@
+/* ==========================================================================
+   FUT 10 ARENA - ESTRUTURA E REGRAS DE TELA (assets/css/layout.css)
+   ========================================================================== */
+
+/* === BLOCO 1: CONTROLE DE EXIBIÇÃO DAS TELAS === */
+
+/* Esconde a tela completamente e remove do fluxo da página */
+.screen-hidden {
+  display: none !important;
+}
+
+/* Exibe a tela normalmente */
+.screen-active {
+  display: block !important;
+}
+
+/* === BLOCO 2: LAYOUT DO CABEÇALHO DO APLICATIVO === */
+.app-header {
+  background-color: #0b2353;
+  color: #ffffff;
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 50%;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+  color: #ffffff;
+}
+
+.user-role {
+  font-size: 0.78rem;
+  color: #b0c4de;
+}
+
+/* === BLOCO 3: ÁREA DE CONTEÚDO PRINCIPAL === */
+.app-content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}

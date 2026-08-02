@@ -1,0 +1,78 @@
+/* ==========================================================================
+   FUT 10 ARENA - ESTILOS GLOBAIS E VARIÁVEIS (assets/css/global.css)
+   Objetivo: Definir a paleta oficial do logo, tipografia, reset e visibilidade.
+   ========================================================================== */
+
+/* === BLOCO 1: VARIÁVEIS DE CORES E CONFIGURAÇÕES VISUAIS === */
+:root {
+  /* Cores Principais (Oficiais da Logo) */
+  --cor-primaria: #0b2353;        /* Azul Marinho oficial */
+  --cor-destaque: #e30613;        /* Vermelho Esportivo para ações e alertas */
+  
+  /* Cores de Fundo e Apoio */
+  --cor-fundo: #f8f9fa;           /* Cinza bem claro para fundo das telas */
+  --cor-card: #ffffff;            /* Branco puro para caixas de conteúdo */
+  --cor-borda: #e2e8f0;           /* Cinza suave para divisores */
+  
+  /* Cores de Texto */
+  --cor-texto-principal: #1a202c;    /* Escuro para ótima leitura em campo */
+  --cor-texto-suave: #64748b;        /* Cinza para detalhes secundários */
+  --cor-texto-claro: #ffffff;        /* Branco para textos sobre fundos escuros */
+
+  /* Tipografia e Tamanhos para Celular */
+  --fonte-principal: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --tamanho-base: 16px;           /* Tamanho excelente para toque e leitura no celular */
+
+  /* Arredondamento e Sombras */
+  --raio-borda-sm: 8px;           /* Botões e campos */
+  --raio-borda-md: 12px;          /* Cards e caixas principais */
+  --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* === BLOCO 2: RESET BÁSICO E REMOÇÃO DE SELEÇÕES FEIAS DO NAVEGADOR === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* Tira o quadrado cinza/azul ao tocar no celular */
+}
+
+/* === BLOCO 3: BASE DO CORPO DA PÁGINA (BODY) E ELEMENTOS DE FORMULÁRIO === */
+body {
+  font-family: var(--fonte-principal);
+  font-size: var(--tamanho-base);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;             /* Protege a tela contra rolagem lateral no celular */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Garante a mesma fonte e remove o contorno feio do navegador ao clicar */
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+/* === BLOCO 4: CONTROLE RIGOROSO DE VISIBILIDADE DAS TELAS (SPA) === */
+/* Garante que telas ocultas fiquem 100% escondidas, evitando vazamentos */
+.screen-hidden {
+  display: none !important;
+}
+
+/* Ativa a exibição da tela atual */
+.screen-active {
+  display: flex !important;
+}
+
+/* --- REGRA DE OCULTAR E EXIBIR TELAS --- */
+.screen-hidden {
+  display: none !important;
+}

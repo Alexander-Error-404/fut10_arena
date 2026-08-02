@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FUT 10 Arena - Gestão Escolinha & Cantina</title>
+  
+  <!-- Estilos Globais e da Tela de Login -->
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/login.css" />
+  <link rel="stylesheet" href="assets/css/utilities.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       TELA 1: LOGIN DO SISTEMA (MODO MOBILE-FIRST)
+       ========================================================================== -->
+  <section id="login-screen" class="login-container screen-active">
+    <div class="login-card">
+      
+      <!-- Logo e Títulos da Aplicação -->
+      <img src="assets/images/logo.png" alt="FUT 10 Arena" class="login-logo" />
+      <h1 class="login-title">FUT 10 Arena</h1>
+      <p class="login-subtitle">Sistema de Gestão Escolinha & Cantina</p>
+
+      <!-- Mensagem de Erro (Alerta em Vermelho Suave) -->
+      <div id="error-message" class="error-message"></div>
+
+      <!-- Formulário de Autenticação -->
+      <form id="form-login">
+        
+        <!-- Seleção de Operador -->
+<div class="form-group">
+  <label for="select-usuario">Quem está acessando?</label>
+  <select id="select-usuario" class="form-control">
+    <option value="" disabled selected>Selecione seu perfil...</option>
+    <option value="Alessandra">Alessandra (Financeiro/Cantina)</option>
+    <option value="Vinícius">Vinícius (Campo/Treinos)</option>
+  </select>
+</div>
+
+<!-- Campo de Senha -->
+<div class="form-group">
+  <label for="input-senha">Senha de Acesso</label>
+  <input 
+    type="password" 
+    id="input-senha" 
+    class="form-control" 
+    placeholder="Digite sua senha" 
+  />
+</div>
+
+        <!-- Botão Principal em Destaque Vermelho -->
+        <button type="submit" class="btn-login-submit">
+          ENTRAR NO SISTEMA
+        </button>
+
+      </form>
+      
+    </div>
+  </section>
+  <!-- ==========================================================================
+       TELA 2: ÁREA PRINCIPAL DO SISTEMA (PAINEL / APP)
+       ========================================================================== -->
+  <main id="app-screen" class="app-container screen-hidden">
+    
+    <!-- Cabeçalho Principal com Informações do Usuário Logado -->
+    <header class="app-header">
+      <div class="user-info">
+        <span id="user-display-name" class="user-name">Usuário</span>
+        <small id="user-display-role" class="user-role">Cargo</small>
+      </div>
+      <button id="btn-logout" class="btn-logout">Sair</button>
+    </header>
+
+    <!-- Conteúdo Dinâmico do Dashboard e Módulos -->
+    <section id="main-content" class="content-area">
+      <!-- O conteúdo do Dashboard/Módulos será injetado via JavaScript -->
+    </section>
+
+  </main>
+
+  <!-- Carregamento dos Scripts JavaScript -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

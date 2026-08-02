@@ -1,0 +1,23 @@
+/* ==========================================================================
+   FUT 10 ARENA - COMPONENTES REUTILIZÁVEIS (components.css)
+   ========================================================================== */
+
+/* === BLOCO 1: BOTÃO DE LOGOUT === */
+.btn-logout {
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-logout:hover {
+  background-color: #b91c1c;
+}
