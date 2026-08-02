@@ -3,6 +3,25 @@
    Objetivo: Autenticação, Persistência de Sessão e Controle de Telas.
    ========================================================================== */
 
+// === BLOCO: CONTROLE DE PERMISSÕES E FILTRO DE TELA ===
+
+function aplicarPermissoesPerfil(nomeUsuario) {
+  // Pega todos os elementos com restrição de perfil
+  const botoesAlessandra = document.querySelectorAll(".menu-alessandra");
+  const botoesVinicius = document.querySelectorAll(".menu-vinicius");
+
+  // Se for Alessandra: esconde o que é do Vinícius e mostra o dela
+  if (nomeUsuario === "Alessandra") {
+    botoesAlessandra.forEach((el) => el.classList.remove("oculto-perfil"));
+    botoesVinicius.forEach((el) => el.classList.add("oculto-perfil"));
+  }
+  // Se for Vinícius: esconde o que é da Alessandra e mostra o dele
+  else if (nomeUsuario === "Vinícius" || nomeUsuario === "Vinicius") {
+    botoesVinicius.forEach((el) => el.classList.remove("oculto-perfil"));
+    botoesAlessandra.forEach((el) => el.classList.add("oculto-perfil"));
+  }
+}
+
 // === FUNÇÕES GLOBAIS DE TRANSIÇÃO E CONTROLE DE TELA ===
 
 function abrirSistema(usuario) {
@@ -35,6 +54,9 @@ function abrirSistema(usuario) {
     appScreen.classList.add("screen-active");
     appScreen.style.setProperty("display", "block", "important");
   }
+
+  // APUCA O FILTRO DE PERFIL (Esconde/Mostra botões conforme o usuário)
+  aplicarPermissoesPerfil(usuario);
 
   // Limpa o campo de senha por segurança
   if (inputSenha) {

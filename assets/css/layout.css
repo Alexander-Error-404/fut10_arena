@@ -202,3 +202,13 @@ header {
   font-size: 0.8rem;
   color: #666666;
 }
+
+/* =================================================================== */
+/* BLOCO: CONTROLE DE VISIBILIDADE POR PERFIL DE USUÁRIO              */
+/* Descrição: Oculta elementos restritos (ex: Fiado para Vinícius)    */
+/* =================================================================== */
+
+/* Classe utilitária para esconder elementos de perfis não autorizados */
+.oculto-perfil {
+  display: none !important;
+}

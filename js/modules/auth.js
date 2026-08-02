@@ -54,3 +54,29 @@ export function alternarParaApp() {
     appScreen.classList.add("screen-active");
   }
 }
+
+// ===================================================================
+// BLOCO: APLICAR PERMISSÕES DE TELA POR USUÁRIO (FILTRO DE PERFIL)
+// Descrição: Esconde ou exibe cartões/módulos baseando-se no nome de
+// quem está logado (Alessandra ou Vinícius).
+// ===================================================================
+export function aplicarPermissoesPerfil(nomeUsuario) {
+  // Pega todos os elementos que possuem restrição da Alessandra ou Vinícius
+  const botoesAlessandra = document.querySelectorAll('.menu-alessandra');
+  const botoesVinicius = document.querySelectorAll('.menu-vinicius');
+
+  // Caso 1: Usuário logado é a Alessandra
+  if (nomeUsuario === 'Alessandra') {
+    // Exibe tudo da Alessandra
+    botoesAlessandra.forEach(el => el.classList.remove('oculto-perfil'));
+    // Esconde o que é exclusivo do Vinícius (Fazer Chamada e Campo Tático)
+    botoesVinicius.forEach(el => el.classList.add('oculto-perfil'));
+  } 
+  // Caso 2: Usuário logado é o Vinícius
+  else if (nomeUsuario === 'Vinícius' || nomeUsuario === 'Vinicius') {
+    // Exibe tudo do Vinícius (Alunos, Chamada e Campo Tático)
+    botoesVinicius.forEach(el => el.classList.remove('oculto-perfil'));
+    // Esconde o que é exclusivo da Alessandra (Cantina, Mensalidades, Financeiro, etc.)
+    botoesAlessandra.forEach(el => el.classList.add('oculto-perfil'));
+  }
+}
