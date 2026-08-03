@@ -212,3 +212,12 @@ header {
 .oculto-perfil {
   display: none !important;
 }
+
+/* ==========================================================================
+   AJUSTE DE ESPAÇAMENTO PARA A BARRA INFERIOR FIXA
+   Garante que o último elemento da tela não fique coberto pela navegação.
+   ========================================================================== */
+.content-area {
+  /* Adiciona 80px de margem interna no rodapé para dar folga da barra de 60px */
+  padding-bottom: 80px !important;
+}

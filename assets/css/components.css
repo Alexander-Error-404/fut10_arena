@@ -21,3 +21,42 @@
 .btn-logout:hover {
   background-color: #b91c1c;
 }
+
+/* ==========================================================================
+   BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ (MOBILE-FIRST)
+   ========================================================================== */
+
+/* Container fixo na parte inferior da tela */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff; /* Fundo claro conforme solicitado */
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000; /* Garante que fique acima dos outros elementos */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo dos botões/ícones de navegação */
+.nav-bottom-item {
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Tamanho confortável para toque no celular */
+  color: #666666;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+/* Efeito quando o botão está ativo (aba selecionada) */
+.nav-bottom-item.active {
+  color: #d32f2f; /* Vermelho padrão do FUT 10 Arena */
+  background-color: #ffebee;
+  transform: scale(1.1);
+}
