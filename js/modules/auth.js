@@ -8,12 +8,10 @@ import { salvarSessao, limparSessao } from "../data/storage.js";
  * Valida o login de forma direta e sem falhas de comparação de texto
  */
 export function realizarLogin(usuarioInput, senhaInput) {
-  // Se não selecionou nenhum usuário
   if (!usuarioInput) {
     return { sucesso: false, mensagem: "Por favor, selecione quem está acessando." };
   }
 
-  // Verifica se a senha é 123
   if (senhaInput === "123") {
     const usuarioObjeto = {
       nome: usuarioInput,
@@ -21,7 +19,6 @@ export function realizarLogin(usuarioInput, senhaInput) {
       perfil: usuarioInput.toLowerCase().includes("alessandra") ? "admin" : "treinador"
     };
 
-    // Salva na sessão e autoriza a entrada
     salvarSessao(usuarioObjeto);
     return { sucesso: true, usuario: usuarioObjeto };
   }
@@ -55,28 +52,20 @@ export function alternarParaApp() {
   }
 }
 
-// ===================================================================
-// BLOCO: APLICAR PERMISSÕES DE TELA POR USUÁRIO (FILTRO DE PERFIL)
-// Descrição: Esconde ou exibe cartões/módulos baseando-se no nome de
-// quem está logado (Alessandra ou Vinícius).
-// ===================================================================
+/**
+ * APLICA O FILTRO DE PERFIL (PAINEL + RODAPÉ)
+ */
 export function aplicarPermissoesPerfil(nomeUsuario) {
-  // Pega todos os elementos que possuem restrição da Alessandra ou Vinícius
-  const botoesAlessandra = document.querySelectorAll('.menu-alessandra');
-  const botoesVinicius = document.querySelectorAll('.menu-vinicius');
+  const elementosAlessandra = document.querySelectorAll('.menu-alessandra, .nav-alessandra');
+  const elementosVinicius = document.querySelectorAll('.menu-vinicius, .nav-vinicius');
 
-  // Caso 1: Usuário logado é a Alessandra
-  if (nomeUsuario === 'Alessandra') {
-    // Exibe tudo da Alessandra
-    botoesAlessandra.forEach(el => el.classList.remove('oculto-perfil'));
-    // Esconde o que é exclusivo do Vinícius (Fazer Chamada e Campo Tático)
-    botoesVinicius.forEach(el => el.classList.add('oculto-perfil'));
-  } 
-  // Caso 2: Usuário logado é o Vinícius
-  else if (nomeUsuario === 'Vinícius' || nomeUsuario === 'Vinicius') {
-    // Exibe tudo do Vinícius (Alunos, Chamada e Campo Tático)
-    botoesVinicius.forEach(el => el.classList.remove('oculto-perfil'));
-    // Esconde o que é exclusivo da Alessandra (Cantina, Mensalidades, Financeiro, etc.)
-    botoesAlessandra.forEach(el => el.classList.add('oculto-perfil'));
+  const eVinicius = nomeUsuario === 'Vinícius' || nomeUsuario === 'Vinicius';
+
+  if (eVinicius) {
+    elementosVinicius.forEach(el => el.classList.remove('oculto-perfil'));
+    elementosAlessandra.forEach(el => el.classList.add('oculto-perfil'));
+  } else {
+    elementosAlessandra.forEach(el => el.classList.remove('oculto-perfil'));
+    elementosVinicius.forEach(el => el.classList.add('oculto-perfil'));
   }
 }

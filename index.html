@@ -79,15 +79,11 @@
     <!-- Conteúdo Dinâmico do Dashboard e Módulos -->
     <section id="main-content" class="content-area">
 
-      <!-- ================================================================= -->
-      <!-- BLOCO: DASHBOARD - KPIS E PAINEL DE CONTROLE                      -->
-      <!-- ================================================================= -->
+      <!-- BLOCO: DASHBOARD - KPIS E PAINEL DE CONTROLE -->
       <div id="dashboard-screen" class="dashboard-container">
 
         <!-- SUB-BLOCO: INDICADORES RÁPIDOS (KPIS) -->
         <div class="indicadores-container">
-
-          <!-- KPI 1: Total de Alunos Matriculados -->
           <div class="card-indicador">
             <div class="ind-icon">👥</div>
             <div class="ind-info">
@@ -96,7 +92,6 @@
             </div>
           </div>
 
-          <!-- KPI 2: Alunos Pendentes -->
           <div class="card-indicador border-pendente">
             <div class="ind-icon">⚠️</div>
             <div class="ind-info">
@@ -104,8 +99,6 @@
               <p>Alunos Pendentes</p>
             </div>
           </div>
-
-          <!-- KPI 3: Estoque Baixo da Cantina -->
           <div class="card-indicador border-estoque">
             <div class="ind-icon">🥤</div>
             <div class="ind-info">
@@ -113,7 +106,7 @@
               <p>Itens a Acabar (Bar)</p>
             </div>
           </div>
-          <!-- KPI 4: Total de Fiado Cantina (Apenas Módulo Alessandra) -->
+
           <div class="card-indicador border-estoque">
             <div class="ind-icon">💸</div>
             <div class="ind-info">
@@ -121,16 +114,14 @@
               <p>Fiado Cantina (A Receber)</p>
             </div>
           </div>
-
         </div> <!-- Fim dos Indicadores -->
 
-        <!-- TÍTULO DA SEÇÃO DE ATALHOS -->
         <h3>Painel de Controle</h3>
 
-        <!-- SUB-BLOCO: MENU DE ATALHOS RÁPIDOS (OS 7 BOTÕES) -->
+        <!-- MENU DE ATALHOS RÁPIDOS (PAINEL SUPERIOR) -->
         <div class="menu-grid">
 
-          <!-- Atalho 1: Gerenciar Alunos -->
+          <!-- 1. Alunos (Ambos) -->
           <button type="button" class="menu-card menu-ambos" data-target="alunos">
             <div class="card-icon">👥</div>
             <div class="card-info">
@@ -139,7 +130,7 @@
             </div>
           </button>
 
-          <!-- Atalho 2: Fazer Chamada -->
+          <!-- 2. Chamada (Vinícius) -->
           <button type="button" class="menu-card menu-vinicius" data-target="chamada">
             <div class="card-icon">📋</div>
             <div class="card-info">
@@ -148,7 +139,7 @@
             </div>
           </button>
 
-          <!-- Atalho 3: Barzinho / Cantina -->
+          <!-- 3. Cantina (Alessandra) -->
           <button type="button" class="menu-card menu-alessandra" data-target="cantina">
             <div class="card-icon">🍿</div>
             <div class="card-info">
@@ -157,7 +148,7 @@
             </div>
           </button>
 
-          <!-- Atalho 4: Mensalidades -->
+          <!-- 4. Mensalidades (Alessandra) -->
           <button type="button" class="menu-card menu-alessandra" data-target="mensalidades">
             <div class="card-icon">💰</div>
             <div class="card-info">
@@ -166,8 +157,8 @@
             </div>
           </button>
 
-          <!-- Atalho 5: Configurações -->
-          <button type="button" class="menu-card menu-alessandra" data-target="configuracoes">
+          <!-- 5. Configurações (Ambos) -->
+          <button type="button" class="menu-card menu-ambos" data-target="configuracoes">
             <div class="card-icon">⚙️</div>
             <div class="card-info">
               <h4>Configurações</h4>
@@ -175,7 +166,7 @@
             </div>
           </button>
 
-          <!-- Atalho 6: Financeiro / Caixa -->
+          <!-- 6. Financeiro (Alessandra) -->
           <button type="button" class="menu-card menu-alessandra" data-target="financeiro">
             <div class="card-icon">📊</div>
             <div class="card-info">
@@ -184,7 +175,7 @@
             </div>
           </button>
 
-          <!-- Atalho 7: Campo Tático -->
+          <!-- 7. Campo Tático (Vinícius) -->
           <button type="button" class="menu-card menu-vinicius" data-target="treinos">
             <div class="card-icon">⚽</div>
             <div class="card-info">
@@ -195,55 +186,28 @@
 
         </div> <!-- Fim da Grid do Menu -->
 
-      </div> <!-- Fim da dashboard-container -->
-
+      </div>
     </section>
 
-<!-- ==========================================================================
-         BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ (MOBILE)
-         ========================================================================== -->
+    <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ -->
     <nav class="bottom-nav">
-      <!-- 1. Início / Dashboard -->
-      <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">
-        🏠
-      </button>
-
-      <!-- 2. Gestão de Alunos -->
-      <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">
-        👥
-      </button>
-
-      <!-- 3. Chamada de Campo (Visível para Vinícius) -->
-      <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">
-        📋
-      </button>
-
-      <!-- 4. Cantina (Visível para Alessandra) -->
-      <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">
-        🍿
-      </button>
-
-      <!-- 5. Financeiro (Visível para Alessandra) -->
-      <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Financeiro">
-        💰
-      </button>
+      <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
+      <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
+      <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">📋</button>
+      <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" title="Campo Tático">⚽</button>
+      <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">🍿</button>
+      <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Mensalidades">💰</button>
+      <button type="button" class="nav-bottom-item nav-alessandra" data-target="relatorios-screen" onclick="navegarPara('relatorios-screen')" title="Financeiro / Caixa">📊</button>
+      <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
     </nav>
 
   </main>
 
-  <!-- ==========================================================================
-       CARREGAMENTO DOS SCRIPTS JAVASCRIPT
-       ========================================================================== -->
-<!-- 1. Dados e Armazenamento Local (Módulos JS) -->
+  <!-- SCRIPTS JAVASCRIPT -->
   <script type="module" src="js/data/mockData.js"></script>
   <script type="module" src="js/data/storage.js"></script>
-
-  <!-- 2. Gerenciador de Navegação e Rotas -->
   <script src="js/router.js"></script>
-
-  <!-- 3. Módulos e Lógica Principal -->
   <script type="module" src="js/modules/auth.js"></script>
   <script type="module" src="js/app.js"></script>
-
 </body>
 </html>

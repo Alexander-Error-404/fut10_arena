@@ -3,24 +3,7 @@
    Objetivo: Autenticação, Persistência de Sessão e Controle de Telas.
    ========================================================================== */
 
-// === BLOCO: CONTROLE DE PERMISSÕES E FILTRO DE TELA ===
-
-function aplicarPermissoesPerfil(nomeUsuario) {
-  // Pega todos os elementos com restrição de perfil
-  const botoesAlessandra = document.querySelectorAll(".menu-alessandra");
-  const botoesVinicius = document.querySelectorAll(".menu-vinicius");
-
-  // Se for Alessandra: esconde o que é do Vinícius e mostra o dela
-  if (nomeUsuario === "Alessandra") {
-    botoesAlessandra.forEach((el) => el.classList.remove("oculto-perfil"));
-    botoesVinicius.forEach((el) => el.classList.add("oculto-perfil"));
-  }
-  // Se for Vinícius: esconde o que é da Alessandra e mostra o dele
-  else if (nomeUsuario === "Vinícius" || nomeUsuario === "Vinicius") {
-    botoesVinicius.forEach((el) => el.classList.remove("oculto-perfil"));
-    botoesAlessandra.forEach((el) => el.classList.add("oculto-perfil"));
-  }
-}
+import { aplicarPermissoesPerfil } from "./modules/auth.js";
 
 // === FUNÇÕES GLOBAIS DE TRANSIÇÃO E CONTROLE DE TELA ===
 
@@ -55,7 +38,7 @@ function abrirSistema(usuario) {
     appScreen.style.setProperty("display", "block", "important");
   }
 
-  // APUCA O FILTRO DE PERFIL (Esconde/Mostra botões conforme o usuário)
+  // APLICA O FILTRO DE PERFIL (Agrupado no auth.js)
   aplicarPermissoesPerfil(usuario);
 
   // Limpa o campo de senha por segurança
@@ -86,7 +69,6 @@ function esconderErro() {
 }
 
 function validarCredenciais(usuario, senha) {
-  // Aceita senhas de teste
   if (senha === "1234" || senha === "123" || senha === "admin") {
     return true;
   }
@@ -101,16 +83,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputSenha = document.getElementById("input-senha");
   const btnLogout = document.getElementById("btn-logout");
 
-  // Verifica se o usuário já estava logado
   const usuarioSalvo = localStorage.getItem("usuarioLogado");
   if (usuarioSalvo) {
     abrirSistema(usuarioSalvo);
   }
 
-  // Captura o envio do formulário de login
   if (formLogin) {
     formLogin.addEventListener("submit", (event) => {
-      // Bloqueia o recarregamento automático da página
       event.preventDefault();
       event.stopPropagation();
 
@@ -130,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Captura o botão de sair
   if (btnLogout) {
     btnLogout.addEventListener("click", (event) => {
       event.preventDefault();
