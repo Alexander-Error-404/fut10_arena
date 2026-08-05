@@ -1,9 +1,17 @@
 /* ==========================================================================
    FUT 10 ARENA - ARQUIVO PRINCIPAL (js/app.js)
-   Objetivo: Autenticação, Persistência de Sessão e Controle de Telas.
+   Objetivo: Autenticação, Persistência de Sessão, Telas e Módulo de Alunos.
    ========================================================================== */
 
+// Importação das funções dos módulos
 import { aplicarPermissoesPerfil } from "./modules/auth.js";
+import { renderizarDashboard } from "./modules/dashboard.js";
+import { 
+  renderizarListaAlunos, 
+  inicializarEventosFiltros, 
+  salvarAluno, 
+  processarFotoAluno 
+} from "./modules/alunos.js";
 
 // === FUNÇÕES GLOBAIS DE TRANSIÇÃO E CONTROLE DE TELA ===
 
@@ -15,9 +23,7 @@ function abrirSistema(usuario) {
   const inputSenha = document.getElementById("input-senha");
 
   // Atualiza nome e cargo no cabeçalho
-  if (userDisplayName) {
-    userDisplayName.textContent = usuario;
-  }
+  if (userDisplayName) userDisplayName.textContent = usuario;
   if (userDisplayRole) {
     userDisplayRole.textContent = usuario.toLowerCase().includes("alessandra")
       ? "Administradora"
@@ -38,13 +44,15 @@ function abrirSistema(usuario) {
     appScreen.style.setProperty("display", "block", "important");
   }
 
-  // APLICA O FILTRO DE PERFIL (Agrupado no auth.js)
+  // Aplica as permissões do perfil selecionado (Alessandra ou Vinícius)
   aplicarPermissoesPerfil(usuario);
 
+  // Carrega os dados atualizados das telas
+  renderizarDashboard();
+  renderizarListaAlunos();
+
   // Limpa o campo de senha por segurança
-  if (inputSenha) {
-    inputSenha.value = "";
-  }
+  if (inputSenha) inputSenha.value = "";
 }
 
 function realizarLogout() {
@@ -69,9 +77,7 @@ function esconderErro() {
 }
 
 function validarCredenciais(usuario, senha) {
-  if (senha === "1234" || senha === "123" || senha === "admin") {
-    return true;
-  }
+  if (senha === "1234" || senha === "123" || senha === "admin") return true;
   return Boolean(usuario && senha.length >= 3);
 }
 
@@ -83,11 +89,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputSenha = document.getElementById("input-senha");
   const btnLogout = document.getElementById("btn-logout");
 
+  // Inicializa os filtros, renderização e eventos do formulário de alunos
+  renderizarListaAlunos();
+  inicializarEventosFiltros();
+  renderizarDashboard();
+
+  // Conecta o formulário do Modal de Alunos e o botão de foto
+  document.getElementById("form-aluno")?.addEventListener("submit", salvarAluno);
+  document.getElementById("input-foto-aluno")?.addEventListener("change", processarFotoAluno);
+
+  // Verifica se já existe sessão salva no localStorage
   const usuarioSalvo = localStorage.getItem("usuarioLogado");
   if (usuarioSalvo) {
     abrirSistema(usuarioSalvo);
   }
 
+  // Escutador do Formulário de Login
   if (formLogin) {
     formLogin.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -104,11 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         exibirErro("Usuário ou senha incorretos. Tente novamente!");
       }
-
       return false;
     });
   }
 
+  // Escutador do Botão de Sair (Logout)
   if (btnLogout) {
     btnLogout.addEventListener("click", (event) => {
       event.preventDefault();

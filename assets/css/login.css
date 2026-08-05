@@ -1,17 +1,15 @@
 /* ==========================================================================
    FUT 10 ARENA - ESTILOS DA TELA DE LOGIN (assets/css/login.css)
-   Objetivo: Layout Mobile-First limpo, sem vazamento de telas.
    ========================================================================== */
 
-/* --- BLOCO 1: CONTAINER PRINCIPAL CENTRALIZADO --- */
 #login-screen {
   display: flex !important;
-  justify-content: center !important; /* Centraliza na horizontal */
-  align-items: center !important;     /* Centraliza na vertical */
+  justify-content: center !important;
+  align-items: center !important;
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
-  background-color: #f4f6f9;          /* Fundo cinza suave */
+  background-color: #f4f6f9;
   padding: 20px;
   position: fixed;
   top: 0;
@@ -20,80 +18,99 @@
   box-sizing: border-box;
 }
 
-/* Card centralizado estilo aplicativo mobile */
-.login-card {
+#login-screen .login-card {
   background-color: #ffffff;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  padding: 32px 24px;
+  padding: 28px 20px;
   width: 100%;
-  max-width: 380px;                    /* Largura perfeita para mobile */
-  margin: auto;                        /* Garante centralização extra */
+  max-width: 360px;
+  margin: auto;
   text-align: center;
-}
-/* --- BLOCO 2: LOGO E TÍTULOS --- */
-.login-logo {
-  max-width: 130px;
-  margin: 0 auto 16px auto;
+  box-sizing: border-box;
 }
 
-.login-title {
-  color: #0b2353; /* Azul escuro oficial */
-  font-size: 1.5rem;
+#login-screen .login-logo {
+  max-width: 110px;
+  height: auto;
+  margin: 0 auto 12px auto;
+  display: block;
+}
+
+#login-screen .login-title {
+  color: #0b2353;
+  font-size: 1.4rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin: 0 0 4px 0;
 }
 
-.login-subtitle {
+#login-screen .login-subtitle {
   color: #64748b;
-  font-size: 0.875rem;
-  margin-bottom: 24px;
+  font-size: 0.85rem;
+  margin: 0 0 20px 0;
 }
 
-/* --- BLOCO 3: CAMPOS E BOTÃO VERMELHO DESTAQUE --- */
-.form-group {
-  margin-bottom: 18px;
+#login-screen .form-group {
+  margin-bottom: 16px;
   text-align: left;
 }
 
-.form-group label {
+#login-screen .form-group label {
   display: block;
   color: #1a202c;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 6px;
 }
 
-.form-control {
+/* Regras restritas para os campos de input e select do login */
+#login-screen .form-control,
+#login-screen select.form-control {
+  display: block !important;
+  width: 100% !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  padding: 0 12px !important;
+  font-size: 0.88rem !important;
+  line-height: 46px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  background-color: #f8fafc !important;
+  color: #1a202c !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  margin: 0 !important;
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
+
+#login-screen .form-control:focus {
+  border-color: #0b2353 !important;
+  background-color: #ffffff !important;
+}
+
+#login-screen select.form-control option {
+  background-color: #ffffff;
+  color: #1a202c;
+  padding: 8px;
+  font-size: 0.88rem;
+}
+
+#login-screen .btn-login-submit {
   width: 100%;
   height: 48px;
-  padding: 0 14px;
-  font-size: 0.95rem;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 8px;
-  background-color: #f8fafc;
-  color: #1a202c;
-  box-sizing: border-box;
-}
-
-.form-control:focus {
-  border-color: #0b2353;
-  background-color: #ffffff;
-}
-
-.btn-login-submit {
-  width: 100%;
-  height: 50px;
-  background-color: #e30613; /* Vermelho destaque */
+  background-color: #e30613;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
 }
 
-.btn-login-submit:active {
+#login-screen .btn-login-submit:active {
   background-color: #b8050f;
 }

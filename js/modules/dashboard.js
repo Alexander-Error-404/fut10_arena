@@ -3,36 +3,42 @@
    ========================================================================== */
 
 /**
- * Renderiza o painel principal com os cards de resumo
+ * Atualiza os valores dos 4 KPIs na tela do Dashboard
  */
 export function renderizarDashboard() {
-  const container = document.getElementById("app-content");
+  // 1. Busca configurações ou usa padrões
+  const config = JSON.parse(localStorage.getItem('fut10_configuracoes')) || {};
+  const limiteInativo = config.limiteDiasInativo || 30;
+  const estoqueMin = config.estoqueMinimo || 5;
 
-  if (!container) return;
+  // 2. Processa dados de Alunos
+  const alunos = JSON.parse(localStorage.getItem('fut10_alunos')) || [];
+  const mesAtual = new Date().getMonth();
+  let inadimplentes = 0;
 
-  container.innerHTML = `
-    <div class="dashboard-container">
-      <h2 style="margin-bottom: 15px; color: #0b1f3a;">📊 Painel Geral</h2>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <!-- Card 1 -->
-        <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #22c55e;">
-          <p style="font-size: 0.85rem; color: #6b7280; margin: 0;">Total de Alunos</p>
-          <h3 style="font-size: 1.8rem; margin: 5px 0 0; color: #111827;">24</h3>
-        </div>
+  alunos.forEach(aluno => {
+    const hist = aluno.historicoPagamentos || [];
+    const temAberto = hist.some((p, i) => i <= mesAtual && p.status === 'aberto');
+    if (temAberto) inadimplentes++;
+  });
 
-        <!-- Card 2 -->
-        <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #3b82f6;">
-          <p style="font-size: 0.85rem; color: #6b7280; margin: 0;">Presenças Hoje</p>
-          <h3 style="font-size: 1.8rem; margin: 5px 0 0; color: #111827;">18</h3>
-        </div>
+  // 3. Processa dados da Cantina e Fiado
+  const estoque = JSON.parse(localStorage.getItem('fut10_estoque_cantina')) || [];
+  const itensCriticos = estoque.filter(item => item.quantidade <= (item.minimo || estoqueMin)).length;
 
-        <!-- Card 3 -->
-        <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #f59e0b;">
-          <p style="font-size: 0.85rem; color: #6b7280; margin: 0;">Treinos Agendados</p>
-          <h3 style="font-size: 1.8rem; margin: 5px 0 0; color: #111827;">2</h3>
-        </div>
-      </div>
-    </div>
-  `;
-}   
+  const comandas = JSON.parse(localStorage.getItem('fut10_comandas_fiado')) || [];
+  const totalFiado = comandas.reduce((acc, c) => acc + (c.valor || 0), 0);
+
+  // 4. Preenche os elementos existentes no HTML
+  const elAlunos = document.getElementById('kpi-alunos');
+  const elInadimplentes = document.getElementById('kpi-inadimplentes');
+  const elEstoque = document.getElementById('kpi-estoque');
+  const elFiado = document.getElementById('kpi-fiado');
+
+  if (elAlunos) elAlunos.textContent = alunos.length;
+  if (elInadimplentes) elInadimplentes.textContent = inadimplentes;
+  if (elEstoque) elEstoque.textContent = itensCriticos;
+  if (elFiado) {
+    elFiado.textContent = totalFiado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+}
