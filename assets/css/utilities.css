@@ -1,0 +1,13 @@
+/* ==========================================================================
+   UTILITÁRIOS DE EXIBIÇÃO DE TELA
+   ========================================================================== */
+
+/* Esconde qualquer elemento da tela completamente */
+.screen-hidden {
+  display: none !important;
+}
+
+/* Exibe o elemento na tela */
+.screen-active {
+  display: block !important;
+}

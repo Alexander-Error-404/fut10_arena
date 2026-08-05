@@ -91,7 +91,6 @@
               <p>Alunos Matriculados</p>
             </div>
           </div>
-
           <div class="card-indicador border-pendente">
             <div class="ind-icon">⚠️</div>
             <div class="ind-info">
@@ -122,7 +121,7 @@
         <div class="menu-grid">
 
           <!-- 1. Alunos (Ambos) -->
-          <button type="button" class="menu-card menu-ambos" data-target="alunos">
+          <button type="button" class="menu-card menu-ambos" data-target="alunos" onclick="navegarPara('alunos-screen')">
             <div class="card-icon">👥</div>
             <div class="card-info">
               <h4>Gerenciar Alunos</h4>
@@ -131,7 +130,7 @@
           </button>
 
           <!-- 2. Chamada (Vinícius) -->
-          <button type="button" class="menu-card menu-vinicius" data-target="chamada">
+          <button type="button" class="menu-card menu-vinicius" data-target="chamada" onclick="navegarPara('chamada-screen')">
             <div class="card-icon">📋</div>
             <div class="card-info">
               <h4>Fazer Chamada</h4>
@@ -140,7 +139,7 @@
           </button>
 
           <!-- 3. Cantina (Alessandra) -->
-          <button type="button" class="menu-card menu-alessandra" data-target="cantina">
+          <button type="button" class="menu-card menu-alessandra" data-target="cantina" onclick="navegarPara('cantina-screen')">
             <div class="card-icon">🍿</div>
             <div class="card-info">
               <h4>Barzinho / Cantina</h4>
@@ -149,7 +148,7 @@
           </button>
 
           <!-- 4. Mensalidades (Alessandra) -->
-          <button type="button" class="menu-card menu-alessandra" data-target="mensalidades">
+          <button type="button" class="menu-card menu-alessandra" data-target="mensalidades" onclick="navegarPara('financeiro-screen')">
             <div class="card-icon">💰</div>
             <div class="card-info">
               <h4>Mensalidades</h4>
@@ -158,7 +157,7 @@
           </button>
 
           <!-- 5. Configurações (Ambos) -->
-          <button type="button" class="menu-card menu-ambos" data-target="configuracoes">
+          <button type="button" class="menu-card menu-ambos" data-target="configuracoes" onclick="navegarPara('configuracoes-screen')">
             <div class="card-icon">⚙️</div>
             <div class="card-info">
               <h4>Configurações</h4>
@@ -167,7 +166,7 @@
           </button>
 
           <!-- 6. Financeiro (Alessandra) -->
-          <button type="button" class="menu-card menu-alessandra" data-target="financeiro">
+          <button type="button" class="menu-card menu-alessandra" data-target="financeiro" onclick="navegarPara('relatorios-screen')">
             <div class="card-icon">📊</div>
             <div class="card-info">
               <h4>Financeiro / Caixa</h4>
@@ -176,7 +175,7 @@
           </button>
 
           <!-- 7. Campo Tático (Vinícius) -->
-          <button type="button" class="menu-card menu-vinicius" data-target="treinos">
+          <button type="button" class="menu-card menu-vinicius" data-target="treinos" onclick="navegarPara('tatico-screen')">
             <div class="card-icon">⚽</div>
             <div class="card-info">
               <h4>Campo Tático</h4>
@@ -186,19 +185,56 @@
 
         </div> <!-- Fim da Grid do Menu -->
 
-      </div>
-    </section>
+      </div> <!-- Fim do dashboard-screen -->
 
-    <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ -->
+      <!-- ==========================================================================
+           ESTRUTURAS DEMAIS TELAS (ESCONDIDAS POR PADRÃO)
+           ========================================================================== -->
+      <section id="alunos-screen" class="screen-hidden">
+        <h2>Gerenciamento de Alunos</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+      <section id="chamada-screen" class="screen-hidden">
+        <h2>Chamada do Campo</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+      <section id="configuracoes-screen" class="screen-hidden">
+        <h2>Configurações do Sistema</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+      <section id="tatico-screen" class="screen-hidden">
+        <h2>Prancheta Tática</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+      <section id="cantina-screen" class="screen-hidden">
+        <h2>Barzinho / Cantina</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+      <section id="financeiro-screen" class="screen-hidden">
+        <h2>Gestão de Mensalidades</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+      <section id="relatorios-screen" class="screen-hidden">
+        <h2>Financeiro / Caixa</h2>
+        <p>Tela em desenvolvimento...</p>
+      </section>
+
+   <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ -->
     <nav class="bottom-nav">
       <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
       <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
       <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">📋</button>
-      <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" title="Campo Tático">⚽</button>
+      <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
+      <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" onclick="navegarPara('tatico-screen')" title="Campo Tático">⚽</button>
       <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">🍿</button>
       <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Mensalidades">💰</button>
       <button type="button" class="nav-bottom-item nav-alessandra" data-target="relatorios-screen" onclick="navegarPara('relatorios-screen')" title="Financeiro / Caixa">📊</button>
-      <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
     </nav>
 
   </main>
