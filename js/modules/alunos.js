@@ -1,9 +1,8 @@
 /* ==========================================================================
-   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js)
+   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js) - PARTE 1
    ========================================================================== */
 
 // BLOCO 1: CONTROLE DE ABERTURA E FECHAMENTO DO MODAL
-// Responsavel por alterar o estado visual da janela sobreposta (modal) do aluno
 export function abrirModalAluno() {
   const modal = document.getElementById("modal-aluno");
   if (modal) {
@@ -20,8 +19,7 @@ export function fecharModalAluno() {
   }
 }
 
-// BLOCO 2: PROCESSAMENTO DA FOTO DO ALUNO
-// Le o arquivo selecionado no input de imagem e converte para Base64 para exibir preview
+// BLOCO 2: PROCESSAMENTO E CONVERSÃO DA FOTO DO ALUNO
 export function processarFotoAluno(event) {
   const file = event.target.files[0];
   if (file) {
@@ -30,15 +28,14 @@ export function processarFotoAluno(event) {
       const preview = document.getElementById("foto-preview");
       if (preview) {
         preview.innerHTML = `<img src="${e.target.result}" alt="Foto do Aluno" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-        preview.dataset.fotoBase64 = e.target.result; // Armazena a imagem codificada no atributo de dados
+        preview.dataset.fotoBase64 = e.target.result;
       }
     };
     reader.readAsDataURL(file);
   }
 }
 
-// BLOCO 3: UTILITÁRIO DE CÁLCULO DE IDADE AUTOMÁTICO
-// Calcula a idade com base na data de nascimento fornecida no input
+// BLOCO 3: CÁLCULO DE IDADE AUTOMÁTICO
 export function calcularIdadeAutomatica(dataNascimento) {
   if (!dataNascimento) return "";
   const hoje = new Date();
@@ -51,32 +48,36 @@ export function calcularIdadeAutomatica(dataNascimento) {
   return idade >= 0 ? `${idade} anos` : "";
 }
 
-// BLOCO 4: CAPTURA E CONSTRUÇÃO DO OBJETO ALUNO
-// Coleta todos os campos preenchidos nas 3 abas do formulario
+// BLOCO 4: CAPTURA COMPLETA DOS DADOS DO FORMULÁRIO
 function capturarDadosFormulario() {
   const fotoPreview = document.getElementById("foto-preview");
-  const dataNasc = document.getElementById("data-nasc")?.value || "";
+  const campoDataNasc = document.getElementById("data-nasc") || document.getElementById("aluno-nascimento");
+  const dataNasc = campoDataNasc?.value || "";
+
+  // Se nao houver foto enviada, atribui a foto padrao da bola (SVG/Emoji formatado)
+  const fotoPadraoBola = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%2313335c'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='50'>⚽</text></svg>";
 
   return {
     id: document.getElementById("aluno-id")?.value || Date.now().toString(),
-    foto: fotoPreview?.dataset?.fotoBase64 || "",
+    foto: fotoPreview?.dataset?.fotoBase64 || fotoPadraoBola,
+    temFotoEnviada: !!fotoPreview?.dataset?.fotoBase64,
     nome: document.getElementById("aluno-nome")?.value || "",
     status: document.getElementById("aluno-status-exibicao")?.value || "ATIVO",
     dataNascimento: dataNasc,
     idade: calcularIdadeAutomatica(dataNasc),
     turma: document.getElementById("aluno-turma")?.value || "",
-    frequencia: document.getElementById("aluno-frequencia")?.value || "1x na semana",
+    frequencia: document.getElementById("aluno-frequencia")?.value || "",
     habilidade: document.getElementById("select-habilidade")?.value || "⭐",
     horario: document.getElementById("aluno-horario")?.value || "",
-    posicao: document.getElementById("aluno-posicao")?.value || "Goleiro",
-    pe: document.getElementById("aluno-pe")?.value || "Destro",
+    posicao: document.getElementById("aluno-posicao")?.value || "",
+    pe: document.getElementById("aluno-pe")?.value || "",
     camiseta: document.getElementById("aluno-camiseta")?.value || "",
     short: document.getElementById("aluno-short")?.value || "",
     meiao: document.getElementById("aluno-meiao")?.value || "",
-    dataMatricula: document.getElementById("aluno-matricula")?.value || "",
-    cpfCrianca: document.getElementById("aluno-cpf-crianca")?.value || "",
+    dataMatricula: (document.getElementById("aluno-matricula") || document.getElementById("aluno-data-matricula"))?.value || "",
+    cpfCrianca: (document.getElementById("aluno-cpf-crianca") || document.getElementById("aluno-cpf"))?.value || "",
     responsavel: document.getElementById("aluno-responsavel")?.value || "",
-    cpfResponsavel: document.getElementById("aluno-cpf-resp")?.value || "",
+    cpfResponsavel: (document.getElementById("aluno-cpf-resp") || document.getElementById("aluno-cpf-responsavel"))?.value || "",
     whatsapp: document.getElementById("aluno-whatsapp")?.value || "",
     emergencia: document.getElementById("aluno-emergencia")?.value || "",
     retirada: document.getElementById("aluno-retirada")?.value || "",
@@ -90,39 +91,49 @@ function capturarDadosFormulario() {
   };
 }
 /* ==========================================================================
-   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js) - CONTINUAÇÃO
+   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js) - PARTE 2
    ========================================================================== */
 
-// BLOCO 5: SALVAMENTO NO LOCALSTORAGE E ATUALIZAÇÃO DA LISTA
+// BLOCO 5: VALIDAÇÃO RIGOROSA E SALVAMENTO NO LOCALSTORAGE
 export function salvarAluno(event) {
   if (event) event.preventDefault();
 
-  const alunoData = capturarDadosFormulario();
+  const a = capturarDadosFormulario();
 
-  if (!alunoData.nome.trim()) {
-    alert("Por favor, preencha o nome do aluno.");
+  // 1. Validação da Aba Técnico + Foto
+  if (!a.nome.trim() || !a.dataNascimento || !a.turma || !a.frequencia || !a.horario || 
+      !a.posicao || !a.pe || !a.camiseta || !a.short || !a.meiao || !a.dataMatricula || !a.cpfCrianca) {
+    alert("⚠️ Preencha TODOS os campos obrigatórios da aba TÉCNICO!");
     return;
   }
 
-  // Obtem os alunos ja cadastrados no localStorage
-  let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
-
-  // Verifica se e edicao de um aluno existente ou insercao de um novo
-  const indexExistente = listaAlunos.findIndex((a) => a.id === alunoData.id);
-
-  if (indexExistente >= 0) {
-    listaAlunos[indexExistente] = alunoData;
-  } else {
-    listaAlunos.unshift(alunoData); // Adiciona o novo aluno no inicio do array
+  // 2. Validação da Aba Família
+  if (!a.responsavel.trim() || !a.cpfResponsavel.trim() || !a.whatsapp.trim() || !a.emergencia.trim() || !a.retirada.trim()) {
+    alert("⚠️ Preencha TODOS os campos obrigatórios da aba FAMÍLIA!");
+    return;
   }
 
-  // Persiste a lista atualizada no armazenamento local
-  localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
+  // Gravação no localStorage
+  try {
+    let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+    const indexExistente = listaAlunos.findIndex((item) => item.id === a.id);
 
-  // Reseta os campos do formulario e o preview da foto
+    if (indexExistente >= 0) {
+      listaAlunos[indexExistente] = a;
+    } else {
+      listaAlunos.unshift(a);
+    }
+
+    localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
+  } catch (erro) {
+    alert("Erro ao salvar os dados no navegador.");
+    return;
+  }
+
+  // Limpeza do formulário
   const form = document.getElementById("formAluno");
   if (form) form.reset();
-  
+
   const preview = document.getElementById("foto-preview");
   if (preview) {
     preview.innerHTML = "📸";
@@ -131,9 +142,11 @@ export function salvarAluno(event) {
 
   fecharModalAluno();
   renderizarListaAlunos();
+
+  alert("✅ Aluno cadastrado com sucesso!");
 }
 
-// BLOCO 6: RENDERIZAR CARDS DOS ALUNOS NA TELA
+// BLOCO 6: RENDERIZAR CARDS DOS ALUNOS NA TELA (FOTO DA BOLA POR PADRÃO)
 export function renderizarListaAlunos() {
   const container = document.getElementById("alunos-lista");
   if (!container) return;
@@ -142,7 +155,7 @@ export function renderizarListaAlunos() {
 
   if (listaAlunos.length === 0) {
     container.innerHTML = `
-      <div style="text-align:center; padding:30px 15px; color:#666;">
+      <div style="text-align:center; padding:30px 15px; color:#dae3ef;">
         <p style="font-size: 16px; margin-bottom: 5px;">Nenhum aluno cadastrado ainda.</p>
         <small>Clique no botão <strong>+</strong> acima para realizar o primeiro cadastro.</small>
       </div>
@@ -150,27 +163,26 @@ export function renderizarListaAlunos() {
     return;
   }
 
-  // Gera o HTML formatado para cada card na tela de alunos
   container.innerHTML = listaAlunos
     .map((aluno) => {
-      const fotoHtml = aluno.foto
-        ? `<img src="${aluno.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; margin-right:12px;">`
-        : `<div style="width:50px; height:50px; border-radius:50%; background:#eee; display:flex; align-items:center; justify-content:center; font-size:20px; margin-right:12px;">⚽</div>`;
+      // Exibe a foto cadastrada ou a foto da bola de futebol por padrão
+      const fotoHtml = `<img src="${aluno.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">`;
 
       return `
-        <div class="card-aluno" style="background:#fff; border-radius:10px; padding:12px; margin-bottom:12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); display:flex; align-items:center;">
-          ${fotoHtml}
-          <div style="flex:1;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <h4 style="margin:0; font-size:16px; color:#333;">${aluno.nome}</h4>
-              <span style="font-size:12px; font-weight:bold; color:#2e7d32; background:#e8f5e9; padding:2px 6px; border-radius:4px;">${aluno.turma || "SEM TURMA"}</span>
+        <div class="aluno-card">
+          <div class="aluno-header">
+            <div class="aluno-foto-perfil ${aluno.status === 'ATIVO' ? 'status-ativo' : 'status-inativo'}">
+              ${fotoHtml}
             </div>
-            <p style="margin:4px 0 2px 0; font-size:13px; color:#555;">
-              <strong>Posição:</strong> ${aluno.posicao} | <strong>Hab:</strong> ${aluno.habilidade}
-            </p>
-            <p style="margin:0; font-size:13px; color:#777;">
-              <strong>Resp:</strong> ${aluno.responsavel} (${aluno.whatsapp})
-            </p>
+            <div>
+              <h4 style="margin:0; font-size:1rem; color:#ffffff;">${aluno.nome}</h4>
+              <span class="badge-categoria">${aluno.turma || "SEM TURMA"}</span>
+            </div>
+            <div class="aluno-estrelas">${aluno.habilidade}</div>
+          </div>
+          <div class="aluno-detalhes">
+            <p><strong>Posição:</strong> ${aluno.posicao} | <strong>Pé:</strong> ${aluno.pe}</p>
+            <p><strong>Responsável:</strong> ${aluno.responsavel} (${aluno.whatsapp})</p>
           </div>
         </div>
       `;
@@ -178,7 +190,7 @@ export function renderizarListaAlunos() {
     .join("");
 }
 
-// BLOCO 7: INICIALIZADOR DE EVENTOS DE FILTROS (RESERVADO PARA PRÓXIMA ETAPA)
+// BLOCO 7: ESCUTADOR DE EVENTOS DE FILTROS E BUSCA
 export function inicializarEventosFiltros() {
   const buscaNome = document.getElementById("busca-nome");
   if (buscaNome) {

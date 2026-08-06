@@ -416,18 +416,17 @@
     </section> <!-- Fim do main-content -->
 
     <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ -->
-    <nav class="bottom-nav">
-      <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
-      <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
-      <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">📋</button>
-      <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
-      <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" onclick="navegarPara('tatico-screen')" title="Campo Tático">⚽</button>
-      <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">🍿</button>
-      <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Mensalidades">💰</button>
-      <button type="button" class="nav-bottom-item nav-alessandra" data-target="relatorios-screen" onclick="navegarPara('relatorios-screen')" title="Financeiro / Caixa">📊</button>
-    </nav>
-
-  </main>
+ <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ (Fora do main para nunca sumir ou travar) -->
+  <nav class="bottom-nav">
+    <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
+    <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
+    <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">📋</button>
+    <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
+    <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" onclick="navegarPara('tatico-screen')" title="Campo Tático">⚽</button>
+    <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">🍿</button>
+    <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Mensalidades">💰</button>
+    <button type="button" class="nav-bottom-item nav-alessandra" data-target="relatorios-screen" onclick="navegarPara('relatorios-screen')" title="Financeiro / Caixa">📊</button>
+  </nav>
 
   <!-- SCRIPTS JAVASCRIPT -->
   <script src="js/router.js"></script>

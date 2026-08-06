@@ -4,9 +4,8 @@
 
 import { salvarSessao, limparSessao } from "../data/storage.js";
 
-/**
- * Valida o login de forma direta e sem falhas de comparação de texto
- */
+// BLOCO 1: AUTENTICAÇÃO DE USUÁRIO
+// Valida o login de forma direta e sem falhas de comparação de texto
 export function realizarLogin(usuarioInput, senhaInput) {
   if (!usuarioInput) {
     return { sucesso: false, mensagem: "Por favor, selecione quem está acessando." };
@@ -32,9 +31,7 @@ export function realizarLogin(usuarioInput, senhaInput) {
   return { sucesso: false, mensagem: "Senha incorreta! Digite 123" };
 }
 
-/**
- * Encerra a sessão do usuário
- */
+// BLOCO 2: ENCERRAMENTO DE SESSÃO
 export function realizarLogout() {
   try {
     limparSessao();
@@ -44,12 +41,11 @@ export function realizarLogout() {
   window.location.reload();
 }
 
-/**
- * Troca as telas visíveis (Esconde o Login e Mostra o App)
- */
+// BLOCO 3: ALTERNÂNCIA DE TELAS (LOGIN -> APP)
 export function alternarParaApp() {
   const loginScreen = document.getElementById("login-screen");
   const appScreen = document.getElementById("app-screen");
+  const bottomNav = document.querySelector(".bottom-nav");
 
   if (loginScreen) {
     loginScreen.classList.remove("screen-active");
@@ -62,15 +58,17 @@ export function alternarParaApp() {
     appScreen.classList.add("screen-active");
     appScreen.style.display = "block";
   }
+
+  // Garante que a barra do rodapé apareça assim que entra no App
+  if (bottomNav) {
+    bottomNav.style.display = "flex";
+  }
 }
 
-/**
- * APLICA O FILTRO DE PERFIL (PAINEL + RODAPÉ)
- */
+// BLOCO 4: CONTROLE DE PERMISSÕES E VISIBILIDADE POR PERFIL
 export function aplicarPermissoesPerfil(usuarioOuNome) {
   if (!usuarioOuNome) return;
 
-  // Trata se veio string ("Vinícius") ou objeto ({ nome: "Vinícius" })
   const nome = typeof usuarioOuNome === "object" ? usuarioOuNome.nome : usuarioOuNome;
 
   const elementosAlessandra = document.querySelectorAll('.menu-alessandra, .nav-alessandra');
@@ -81,7 +79,7 @@ export function aplicarPermissoesPerfil(usuarioOuNome) {
   if (eVinicius) {
     elementosVinicius.forEach(el => {
       el.classList.remove('oculto-perfil');
-      el.style.display = '';
+      el.style.display = el.classList.contains('nav-bottom-item') ? 'flex' : 'flex';
     });
     elementosAlessandra.forEach(el => {
       el.classList.add('oculto-perfil');
@@ -90,7 +88,7 @@ export function aplicarPermissoesPerfil(usuarioOuNome) {
   } else {
     elementosAlessandra.forEach(el => {
       el.classList.remove('oculto-perfil');
-      el.style.display = '';
+      el.style.display = el.classList.contains('nav-bottom-item') ? 'flex' : 'flex';
     });
     elementosVinicius.forEach(el => {
       el.classList.add('oculto-perfil');
