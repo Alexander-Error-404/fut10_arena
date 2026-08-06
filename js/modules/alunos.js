@@ -1,251 +1,187 @@
-// ==========================================================================
-// FUT 10 ARENA - MÓDULO DE GERENCIAMENTO DE ALUNOS (js/modules/alunos.js)
-// ==========================================================================
+/* ==========================================================================
+   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js)
+   ========================================================================== */
 
-// Carrega os alunos salvos no localStorage ou inicia uma lista vazia
-let alunos = JSON.parse(localStorage.getItem('fut10_alunos')) || [];
-
-// Guarda temporariamente a foto selecionada em formato Base64
-let fotoBase64 = "";
-
-/**
- * BLOCO: CÁLCULOS E REGRAS DE NEGÓCIO
- */
-function calcularDiasDesde(dataString) {
-    if (!dataString) return 999; 
-    const dataPassada = new Date(dataString);
-    const hoje = new Date();
-    dataPassada.setHours(0, 0, 0, 0);
-    hoje.setHours(0, 0, 0, 0);
-    const diferencaTempo = hoje.getTime() - dataPassada.getTime();
-    return Math.floor(diferencaTempo / (1000 * 60 * 60 * 24));
-}
-
-function obterStatusAluno(aluno) {
-    const diasSemPresenca = calcularDiasDesde(aluno.ultimaPresenca || aluno.matricula);
-    return diasSemPresenca >= 30 ? 'INATIVO' : 'ATIVO';
-}
-
-function contarAtivosNaTurma(nomeTurma, idIgnorar = "") {
-    const turmaLimpa = nomeTurma.trim().toUpperCase();
-    return alunos.filter(a => {
-        if (a.id === idIgnorar) return false;
-        return a.turma.trim().toUpperCase() === turmaLimpa && obterStatusAluno(a) === 'ATIVO';
-    }).length;
-}
-
-function atualizarFiltroTurmas() {
-    const filtroTurma = document.getElementById('filtro-turma-busca');
-    if (!filtroTurma) return;
-    
-    const valorAtual = filtroTurma.value;
-    filtroTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
-    
-    const turmasUnicas = [...new Set(alunos.map(a => a.turma.trim().toUpperCase()))].sort();
-    
-    turmasUnicas.forEach(turma => {
-        const option = document.createElement('option');
-        option.value = turma;
-        option.textContent = turma;
-        filtroTurma.appendChild(option);
-    });
-    
-    filtroTurma.value = valorAtual;
-}
-
-/**
- * BLOCO: RENDERIZAÇÃO DA LISTA DE ALUNOS E FILTROS
- */
-export function renderizarListaAlunos() {
-    const container = document.getElementById('alunos-lista');
-    if (!container) return;
-
-    atualizarFiltroTurmas();
-
-    const buscaNome = (document.getElementById('busca-nome')?.value || '').toLowerCase();
-    const buscaTurma = (document.getElementById('filtro-turma-busca')?.value || '').toUpperCase();
-    const buscaStatus = document.getElementById('filtro-status-busca')?.value || '';
-    const buscaHabilidade = document.getElementById('filtro-habilidade')?.value || '';
-
-    const alunosFiltrados = alunos.filter(aluno => {
-        const statusCalculado = obterStatusAluno(aluno);
-        const bateNome = aluno.nome.toLowerCase().includes(buscaNome);
-        const bateTurma = !buscaTurma || aluno.turma.trim().toUpperCase() === buscaTurma;
-        const bateStatus = !buscaStatus || statusCalculado === buscaStatus;
-        const bateHabilidade = !buscaHabilidade || String(aluno.estrelas || aluno.habilidade || '') === buscaHabilidade;
-        
-        return bateNome && bateTurma && bateStatus && bateHabilidade;
-    });
-
-    container.innerHTML = '';
-
-    if (alunosFiltrados.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #dae3ef; margin-top: 20px;">Nenhum aluno encontrado.</p>';
-        return;
-    }
-
-    alunosFiltrados.forEach(aluno => {
-        const status = obterStatusAluno(aluno);
-        const classeStatus = status === 'ATIVO' ? 'status-ativo' : 'status-inativo';
-
-        const card = document.createElement('div');
-        card.className = 'aluno-card';
-        card.innerHTML = `
-            <div class="aluno-header">
-                <div class="aluno-foto-perfil ${classeStatus}">
-                    <img src="${aluno.foto || 'assets/images/logo.png'}" alt="${aluno.nome}">
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: #fff;">${aluno.nome}</h4>
-                    <span class="badge-categoria">${aluno.turma} | ${aluno.posicao || 'Sem Posição'}</span>
-                </div>
-            </div>
-            <div class="aluno-detalhes">
-                <p><strong>Responsável:</strong> ${aluno.responsavel || 'Não informado'}</p>
-                <p><strong>WhatsApp:</strong> ${aluno.whatsapp || 'Não informado'}</p>
-            </div>
-            <div class="aluno-acoes">
-                <button type="button" class="btn-acao btn-editar" onclick="window.editarAluno('${aluno.id}')">✏️ Edit</button>
-                <button type="button" class="btn-acao btn-excluir" onclick="window.excluirAluno('${aluno.id}')">🗑️</button>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-export function inicializarEventosFiltros() {
-    const idsFiltros = ['busca-nome', 'filtro-turma-busca', 'filtro-status-busca', 'filtro-habilidade'];
-    idsFiltros.forEach(id => {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-            elemento.addEventListener('input', renderizarListaAlunos);
-            elemento.addEventListener('change', renderizarListaAlunos);
-        }
-    });
-}
-
-/**
- * BLOCO: MODAL, UPLOAD DE FOTO E OPERAÇÕES DE SALVAR/EDITAR/EXCLUIR
- */
+// BLOCO 1: CONTROLE DE ABERTURA E FECHAMENTO DO MODAL
+// Responsavel por alterar o estado visual da janela sobreposta (modal) do aluno
 export function abrirModalAluno() {
-    fotoBase64 = "";
-    const form = document.getElementById('formAluno');
-    if (form) form.reset();
-    
-    const campoId = document.getElementById('aluno-id');
-    if (campoId) campoId.value = '';
-
-    const preview = document.getElementById('foto-preview');
-    if (preview) preview.innerHTML = '📸';
-
-    const modal = document.getElementById('modal-aluno');
-    if (modal) modal.style.display = 'flex';
+  const modal = document.getElementById("modal-aluno");
+  if (modal) {
+    modal.classList.add("active");
+    modal.style.display = "flex";
+  }
 }
 
 export function fecharModalAluno() {
-    const modal = document.getElementById('modal-aluno');
-    if (modal) modal.style.display = 'none';
+  const modal = document.getElementById("modal-aluno");
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "none";
+  }
 }
 
+// BLOCO 2: PROCESSAMENTO DA FOTO DO ALUNO
+// Le o arquivo selecionado no input de imagem e converte para Base64 para exibir preview
 export function processarFotoAluno(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
+  const file = event.target.files[0];
+  if (file) {
     const reader = new FileReader();
-    reader.onload = function(e) {
-        fotoBase64 = e.target.result;
-        const preview = document.getElementById('foto-preview');
-        if (preview) {
-            preview.innerHTML = `<img src="${fotoBase64}" alt="Foto" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-        }
+    reader.onload = function (e) {
+      const preview = document.getElementById("foto-preview");
+      if (preview) {
+        preview.innerHTML = `<img src="${e.target.result}" alt="Foto do Aluno" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+        preview.dataset.fotoBase64 = e.target.result; // Armazena a imagem codificada no atributo de dados
+      }
     };
     reader.readAsDataURL(file);
+  }
 }
 
+// BLOCO 3: UTILITÁRIO DE CÁLCULO DE IDADE AUTOMÁTICO
+// Calcula a idade com base na data de nascimento fornecida no input
+export function calcularIdadeAutomatica(dataNascimento) {
+  if (!dataNascimento) return "";
+  const hoje = new Date();
+  const nasc = new Date(dataNascimento);
+  let idade = hoje.getFullYear() - nasc.getFullYear();
+  const mes = hoje.getMonth() - nasc.getMonth();
+  if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
+    idade--;
+  }
+  return idade >= 0 ? `${idade} anos` : "";
+}
+
+// BLOCO 4: CAPTURA E CONSTRUÇÃO DO OBJETO ALUNO
+// Coleta todos os campos preenchidos nas 3 abas do formulario
+function capturarDadosFormulario() {
+  const fotoPreview = document.getElementById("foto-preview");
+  const dataNasc = document.getElementById("data-nasc")?.value || "";
+
+  return {
+    id: document.getElementById("aluno-id")?.value || Date.now().toString(),
+    foto: fotoPreview?.dataset?.fotoBase64 || "",
+    nome: document.getElementById("aluno-nome")?.value || "",
+    status: document.getElementById("aluno-status-exibicao")?.value || "ATIVO",
+    dataNascimento: dataNasc,
+    idade: calcularIdadeAutomatica(dataNasc),
+    turma: document.getElementById("aluno-turma")?.value || "",
+    frequencia: document.getElementById("aluno-frequencia")?.value || "1x na semana",
+    habilidade: document.getElementById("select-habilidade")?.value || "⭐",
+    horario: document.getElementById("aluno-horario")?.value || "",
+    posicao: document.getElementById("aluno-posicao")?.value || "Goleiro",
+    pe: document.getElementById("aluno-pe")?.value || "Destro",
+    camiseta: document.getElementById("aluno-camiseta")?.value || "",
+    short: document.getElementById("aluno-short")?.value || "",
+    meiao: document.getElementById("aluno-meiao")?.value || "",
+    dataMatricula: document.getElementById("aluno-matricula")?.value || "",
+    cpfCrianca: document.getElementById("aluno-cpf-crianca")?.value || "",
+    responsavel: document.getElementById("aluno-responsavel")?.value || "",
+    cpfResponsavel: document.getElementById("aluno-cpf-resp")?.value || "",
+    whatsapp: document.getElementById("aluno-whatsapp")?.value || "",
+    emergencia: document.getElementById("aluno-emergencia")?.value || "",
+    retirada: document.getElementById("aluno-retirada")?.value || "",
+    temIrmao: document.getElementById("tem-irmao")?.checked || false,
+    atestadoDia: document.getElementById("atestado-dia")?.checked || false,
+    usoImagem: document.getElementById("uso-imagem")?.checked || false,
+    restricoesSaude: document.getElementById("aluno-saude")?.value || "",
+    alergias: document.getElementById("aluno-alergias")?.value || "",
+    convenio: document.getElementById("aluno-convenio")?.value || "",
+    carteirinha: document.getElementById("aluno-carteirinha")?.value || ""
+  };
+}
+/* ==========================================================================
+   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js) - CONTINUAÇÃO
+   ========================================================================== */
+
+// BLOCO 5: SALVAMENTO NO LOCALSTORAGE E ATUALIZAÇÃO DA LISTA
 export function salvarAluno(event) {
-    event.preventDefault();
+  if (event) event.preventDefault();
 
-    const id = document.getElementById('aluno-id')?.value;
-    const turma = document.getElementById('aluno-turma')?.value || '';
+  const alunoData = capturarDadosFormulario();
 
-    const ativosNaTurma = contarAtivosNaTurma(turma, id);
-    if (ativosNaTurma >= 20) {
-        alert(`Atenção: A turma "${turma}" já atingiu o limite máximo de 20 alunos ativos!`);
-        return;
-    }
+  if (!alunoData.nome.trim()) {
+    alert("Por favor, preencha o nome do aluno.");
+    return;
+  }
 
-    const alunoDados = {
-        id: id || Date.now().toString(),
-        nome: document.getElementById('aluno-nome')?.value || '',
-        turma: turma,
-        posicao: document.getElementById('aluno-posicao')?.value || '',
-        pe: document.getElementById('aluno-pe')?.value || '',
-        habilidade: document.getElementById('select-habilidade')?.value || '⭐',
-        camiseta: document.getElementById('aluno-camiseta')?.value || '',
-        short: document.getElementById('aluno-short')?.value || '',
-        meiao: document.getElementById('aluno-meiao')?.value || '',
-        responsavel: document.getElementById('aluno-responsavel')?.value || '',
-        cpfResponsavel: document.getElementById('aluno-cpf-resp')?.value || '',
-        whatsapp: document.getElementById('aluno-whatsapp')?.value || '',
-        emergencia: document.getElementById('aluno-emergencia')?.value || '',
-        retirada: document.getElementById('aluno-retirada')?.value || '',
-        atestado: document.getElementById('atestado-dia')?.checked || false,
-        imagem: document.getElementById('uso-imagem')?.checked || false,
-        saude: document.getElementById('aluno-saude')?.value || '',
-        matricula: id ? (alunos.find(a => a.id === id)?.matricula || new Date().toISOString().split('T')[0]) : new Date().toISOString().split('T')[0],
-        foto: fotoBase64 || (id ? alunos.find(a => a.id === id)?.foto : '')
-    };
+  // Obtem os alunos ja cadastrados no localStorage
+  let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
 
-    if (id) {
-        const index = alunos.findIndex(a => a.id === id);
-        if (index !== -1) alunos[index] = alunoDados;
-    } else {
-        alunos.push(alunoDados);
-    }
+  // Verifica se e edicao de um aluno existente ou insercao de um novo
+  const indexExistente = listaAlunos.findIndex((a) => a.id === alunoData.id);
 
-    localStorage.setItem('fut10_alunos', JSON.stringify(alunos));
-    fecharModalAluno();
-    renderizarListaAlunos();
+  if (indexExistente >= 0) {
+    listaAlunos[indexExistente] = alunoData;
+  } else {
+    listaAlunos.unshift(alunoData); // Adiciona o novo aluno no inicio do array
+  }
+
+  // Persiste a lista atualizada no armazenamento local
+  localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
+
+  // Reseta os campos do formulario e o preview da foto
+  const form = document.getElementById("formAluno");
+  if (form) form.reset();
+  
+  const preview = document.getElementById("foto-preview");
+  if (preview) {
+    preview.innerHTML = "📸";
+    delete preview.dataset.fotoBase64;
+  }
+
+  fecharModalAluno();
+  renderizarListaAlunos();
 }
 
-window.editarAluno = function(id) {
-    const aluno = alunos.find(a => a.id === id);
-    if (!aluno) return;
+// BLOCO 6: RENDERIZAR CARDS DOS ALUNOS NA TELA
+export function renderizarListaAlunos() {
+  const container = document.getElementById("alunos-lista");
+  if (!container) return;
 
-    abrirModalAluno();
-    
-    const setVal = (elemId, val) => {
-        const el = document.getElementById(elemId);
-        if (el) el.value = val || '';
-    };
+  const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
 
-    setVal('aluno-id', aluno.id);
-    setVal('aluno-nome', aluno.nome);
-    setVal('aluno-turma', aluno.turma);
-    setVal('aluno-posicao', aluno.posicao);
-    setVal('aluno-pe', aluno.pe);
-    setVal('select-habilidade', aluno.habilidade);
-    setVal('aluno-camiseta', aluno.camiseta);
-    setVal('aluno-short', aluno.short);
-    setVal('aluno-meiao', aluno.meiao);
-    setVal('aluno-responsavel', aluno.responsavel);
-    setVal('aluno-cpf-resp', aluno.cpfResponsavel);
-    setVal('aluno-whatsapp', aluno.whatsapp);
-    setVal('aluno-emergencia', aluno.emergencia);
-    setVal('aluno-retirada', aluno.retirada);
-    setVal('aluno-saude', aluno.saude);
+  if (listaAlunos.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:30px 15px; color:#666;">
+        <p style="font-size: 16px; margin-bottom: 5px;">Nenhum aluno cadastrado ainda.</p>
+        <small>Clique no botão <strong>+</strong> acima para realizar o primeiro cadastro.</small>
+      </div>
+    `;
+    return;
+  }
 
-    fotoBase64 = aluno.foto || '';
-    const preview = document.getElementById('foto-preview');
-    if (preview && fotoBase64) {
-        preview.innerHTML = `<img src="${fotoBase64}" alt="Foto" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-    }
-};
+  // Gera o HTML formatado para cada card na tela de alunos
+  container.innerHTML = listaAlunos
+    .map((aluno) => {
+      const fotoHtml = aluno.foto
+        ? `<img src="${aluno.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; margin-right:12px;">`
+        : `<div style="width:50px; height:50px; border-radius:50%; background:#eee; display:flex; align-items:center; justify-content:center; font-size:20px; margin-right:12px;">⚽</div>`;
 
-window.excluirAluno = function(id) {
-    if (confirm('Tem certeza que deseja excluir este aluno?')) {
-        alunos = alunos.filter(a => a.id !== id);
-        localStorage.setItem('fut10_alunos', JSON.stringify(alunos));
-        renderizarListaAlunos();
-    }
-};
+      return `
+        <div class="card-aluno" style="background:#fff; border-radius:10px; padding:12px; margin-bottom:12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); display:flex; align-items:center;">
+          ${fotoHtml}
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h4 style="margin:0; font-size:16px; color:#333;">${aluno.nome}</h4>
+              <span style="font-size:12px; font-weight:bold; color:#2e7d32; background:#e8f5e9; padding:2px 6px; border-radius:4px;">${aluno.turma || "SEM TURMA"}</span>
+            </div>
+            <p style="margin:4px 0 2px 0; font-size:13px; color:#555;">
+              <strong>Posição:</strong> ${aluno.posicao} | <strong>Hab:</strong> ${aluno.habilidade}
+            </p>
+            <p style="margin:0; font-size:13px; color:#777;">
+              <strong>Resp:</strong> ${aluno.responsavel} (${aluno.whatsapp})
+            </p>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+// BLOCO 7: INICIALIZADOR DE EVENTOS DE FILTROS (RESERVADO PARA PRÓXIMA ETAPA)
+export function inicializarEventosFiltros() {
+  const buscaNome = document.getElementById("busca-nome");
+  if (buscaNome) {
+    buscaNome.addEventListener("input", renderizarListaAlunos);
+  }
+}

@@ -1,36 +1,30 @@
-// ==========================================================================
-// ROTEADOR DE NAVEGAÇÃO ENTRE TELAS (SPA)
-// ==========================================================================
+/* ==========================================================================
+   FUT 10 ARENA - NAVEGAÇÃO DE TELAS (js/router.js)
+   ========================================================================== */
 
-function navegarPara(idTelaAlvo) {
-  // 1. Seleciona todas as seções de telas do sistema
-  const telas = document.querySelectorAll('#main-content > div, #main-content > section');
-
-  // 2. Esconde todas as telas adicionando a classe screen-hidden
-  telas.forEach(tela => {
-    tela.classList.add('screen-hidden');
-    tela.classList.remove('screen-active');
+function navegarPara(idTela) {
+  // Esconde todas as seções/telas do sistema
+  const telas = document.querySelectorAll("#main-content > div, #main-content > section");
+  telas.forEach((tela) => {
+    tela.classList.add("screen-hidden");
+    tela.style.display = "none";
   });
 
-  // 3. Procura a tela de destino solicitada
-  const telaDestino = document.getElementById(idTelaAlvo);
-
+  // Exibe a tela de destino
+  const telaDestino = document.getElementById(idTela);
   if (telaDestino) {
-    // Exibe a tela alvo removendo o esconde e ativando o display
-    telaDestino.classList.remove('screen-hidden');
-    telaDestino.classList.add('screen-active');
-  } else {
-    console.warn(`Aviso: A tela com o ID "${idTelaAlvo}" não foi encontrada no HTML.`);
+    telaDestino.classList.remove("screen-hidden");
+    telaDestino.style.display = "block";
   }
 
-  // 4. Atualiza os botões ativos na barra de navegação inferior
-  const botoesNav = document.querySelectorAll('.bottom-nav .nav-bottom-item');
-  botoesNav.forEach(botao => {
-    // Se o botão apontar para a tela aberta, ganha a classe active
-    if (botao.getAttribute('data-target') === idTelaAlvo) {
-      botao.classList.add('active');
-    } else {
-      botao.classList.remove('active');
+  // Atualiza a barra de navegação inferior (active)
+  document.querySelectorAll(".bottom-nav button").forEach((btn) => {
+    btn.classList.remove("active");
+    if (btn.getAttribute("data-target") === idTela) {
+      btn.classList.add("active");
     }
   });
 }
+
+// Torna a função visível para os onclicks do HTML
+window.navegarPara = navegarPara;
