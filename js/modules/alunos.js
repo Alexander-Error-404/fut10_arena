@@ -103,7 +103,6 @@ function capturarDadosFormulario() {
     carteirinha: maiusculo("aluno-carteirinha")
   };
 }
-
 // 5. SALVAR OU EDITAR ALUNO COM VALIDAÇÃO COMPLETA DE TODOS OS CAMPOS
 export function salvarAluno(event) {
   if (event) event.preventDefault();
@@ -214,8 +213,7 @@ function atualizarFiltroTurmas(listaAlunos) {
   selectTurma.innerHTML = `<option value="">Todas as Turmas</option>` +
     turmasUnicas.map((t) => `<option value="${t}" ${t === turmaAtual ? "selected" : ""}>${t}</option>`).join("");
 }
-
-// 9. RENDERIZAR CARDS DOS ALUNOS COM FILTROS E LINK DO WHATSAPP
+// 9. RENDERIZAR CARDS DOS ALUNOS COM FILTROS CORRIGIDOS E LINK DO WHATSAPP
 export function renderizarListaAlunos() {
   const container = document.getElementById("alunos-lista");
   if (!container) return;
@@ -224,13 +222,27 @@ export function renderizarListaAlunos() {
 
   atualizarFiltroTurmas(listaAlunos);
 
-  const termoBusca = (document.getElementById("busca-nome")?.value || "").toLowerCase();
+  // Captura os valores de cada filtro ajustando para os IDs reais do index.html
+  const termoBusca = (document.getElementById("busca-nome")?.value || "").toLowerCase().trim();
   const turmaSelecionada = document.getElementById("filtro-turma")?.value || "";
+  const statusSelecionado = (document.getElementById("filtro-status-busca")?.value || "").toUpperCase().trim();
+  const habilidadeSelecionada = document.getElementById("filtro-habilidade")?.value || "";
 
+  // Filtra os alunos combinando todas as condições
   const alunosFiltrados = listaAlunos.filter((aluno) => {
     const atendeNome = (aluno.nome || "").toLowerCase().includes(termoBusca);
     const atendeTurma = !turmaSelecionada || aluno.turma === turmaSelecionada;
-    return atendeNome && atendeTurma;
+    
+    // Filtro por Status (ATIVO / INATIVO)
+    const atendeStatus = !statusSelecionado || (aluno.status || "ATIVO").toUpperCase() === statusSelecionado;
+    
+    // Filtro por Habilidade: Conta quantas estrelas '⭐' existem no cadastro do aluno
+    const qtdEstrelasAluno = (aluno.habilidade || "").split("⭐").length - 1;
+    const atendeHabilidade = !habilidadeSelecionada || 
+      aluno.habilidade === habilidadeSelecionada || 
+      qtdEstrelasAluno.toString() === habilidadeSelecionada;
+
+    return atendeNome && atendeTurma && atendeStatus && atendeHabilidade;
   });
 
   if (alunosFiltrados.length === 0) {
@@ -302,9 +314,14 @@ export function inicializarEventosFiltros() {
   if (buscaNome) buscaNome.addEventListener("input", renderizarListaAlunos);
 
   const filtroTurma = document.getElementById("filtro-turma");
-  if (filtroTurma) {
-    filtroTurma.addEventListener("change", renderizarListaAlunos);
-  }
+  if (filtroTurma) filtroTurma.addEventListener("change", renderizarListaAlunos);
+
+  // Escutador ajustado com o ID real do HTML
+  const filtroStatus = document.getElementById("filtro-status-busca");
+  if (filtroStatus) filtroStatus.addEventListener("change", renderizarListaAlunos);
+
+  const filtroHabilidade = document.getElementById("filtro-habilidade");
+  if (filtroHabilidade) filtroHabilidade.addEventListener("change", renderizarListaAlunos);
 
   aplicarMascaraInput("aluno-cpf-crianca", mascararCPF);
   aplicarMascaraInput("aluno-cpf-resp", mascararCPF);
@@ -338,4 +355,4 @@ function mascararTelefone(v) {
 
 // EXPOSIÇÃO GLOBAL DE FUNÇÕES
 window.preencherModalParaEdicao = preencherModalParaEdicao;
-window.excluirAluno = excluirAluno; 
+window.excluirAluno = excluirAluno;
