@@ -2,6 +2,8 @@
    FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js)
    ========================================================================== */
 
+import { renderizarDashboard } from "./dashboard.js";
+
 // 1. CONTROLE DE ABERTURA E FECHAMENTO DO MODAL
 export function abrirModalAluno() {
   const modal = document.getElementById("modal-aluno");
@@ -238,6 +240,7 @@ export function renderizarListaAlunos() {
         <small>Verifique os filtros ou cadastre um novo aluno.</small>
       </div>
     `;
+    renderizarDashboard();
     return;
   }
 
@@ -290,6 +293,7 @@ export function renderizarListaAlunos() {
       `;
     })
     .join("");
+    renderizarDashboard();
 }
 
 // 10. MÁSCARAS DE ENTRADA E ESCUTADORES DE EVENTOS
