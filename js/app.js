@@ -1,9 +1,8 @@
 /* ==========================================================================
-   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js)
+   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js) - PARTE 1
    ========================================================================== */
 
 import { aplicarPermissoesPerfil } from "./modules/auth.js";
-import { renderizarDashboard } from "./modules/dashboard.js";
 import { 
   renderizarListaAlunos, 
   inicializarEventosFiltros, 
@@ -14,11 +13,12 @@ import {
   calcularIdadeAutomatica
 } from "./modules/alunos.js";
 
-// EXPOSIÇÃO GLOBAL DE FUNÇÕES ESSENCIAIS PARA OS ONCLICKS DO HTML
+// BLOCO DE EXPOSIÇÃO GLOBAL
+// Garante acesso direto pelos eventos onclick do HTML
 window.abrirModalAluno = abrirModalAluno;
 window.fecharModalAluno = fecharModalAluno;
 
-// BLOCO 1: GERENCIAMENTO DE TRANSIÇÃO E ENTRADA NO SISTEMA
+// BLOCO 1: TRANSIÇÃO E ENTRADA NO SISTEMA
 function abrirSistema(usuario) {
   const loginScreen = document.getElementById("login-screen");
   const appScreen = document.getElementById("app-screen");
@@ -33,7 +33,6 @@ function abrirSistema(usuario) {
       : "Treinador (Campo/Treinos)";
   }
 
-  // Oculta a tela de Login e exibe o Painel Principal
   if (loginScreen) {
     loginScreen.classList.add("screen-hidden");
     loginScreen.classList.remove("screen-active");
@@ -46,21 +45,22 @@ function abrirSistema(usuario) {
     appScreen.style.setProperty("display", "block", "important");
   }
 
-  // Aplica as restricoes de visualizacao conforme o operador logado
   try { aplicarPermissoesPerfil(usuario); } catch (e) {}
-  try { renderizarDashboard(); } catch (e) {}
   try { renderizarListaAlunos(); } catch (e) {}
 
   if (inputSenha) inputSenha.value = "";
 }
 
-// BLOCO 2: ENCERRAMENTO DE SESSÃO (LOGOUT)
+// BLOCO 2: LOGOUT
 function realizarLogout() {
   localStorage.removeItem("usuarioLogado");
   window.location.reload();
 }
+/* ==========================================================================
+   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js) - PARTE 2
+   ========================================================================== */
 
-// BLOCO 3: MENSAGENS DE FEEDBACK VISUAL PARA LOGIN
+// BLOCO 3: MENSAGENS DE FEEDBACK VISUAL
 function exibirErro(mensagem) {
   const errorMessage = document.getElementById("error-message");
   if (errorMessage) {
@@ -82,11 +82,7 @@ function validarCredenciais(usuario, senha) {
   return Boolean(usuario && senha.length >= 3);
 }
 
-/* ==========================================================================
-   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js) - CONTINUAÇÃO
-   ========================================================================== */
-
-// BLOCO 4: REGISTRO DE EVENTOS E EXECUÇÃO AO CARREGAR O DOM
+// BLOCO 4: REGISTRO DE EVENTOS DOM
 document.addEventListener("DOMContentLoaded", () => {
   const formLogin = document.getElementById("form-login");
   const selectUsuario = document.getElementById("select-usuario");
@@ -95,33 +91,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputDataNasc = document.getElementById("data-nasc");
   const inputIdade = document.getElementById("idade-aluno");
 
-  // Renderiza a lista de alunos e prepara os filtros de busca
   try { renderizarListaAlunos(); } catch (e) {}
   try { inicializarEventosFiltros(); } catch (e) {}
-  try { renderizarDashboard(); } catch (e) {}
 
-  // EVENTO: Troca de Abas do Modal da Ficha do Aluno
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const tabTarget = e.currentTarget.getAttribute("data-tab");
-
-      // Desativa todas as abas e conteudos ativos
       document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
       document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
-
-      // Ativa apenas a aba clicada
       e.currentTarget.classList.add("active");
       document.getElementById(tabTarget)?.classList.add("active");
     });
   });
 
-  // EVENTO: Submissao do formulario de cadastro de alunos
   document.getElementById("formAluno")?.addEventListener("submit", salvarAluno);
-
-  // EVENTO: Processamento e Preview de Foto de Perfil
   document.getElementById("foto-aluno")?.addEventListener("change", processarFotoAluno);
 
-  // EVENTO: Calculo automatico da Idade do Aluno
   if (inputDataNasc) {
     inputDataNasc.addEventListener("change", (e) => {
       if (inputIdade) {
@@ -130,13 +115,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // VERIFICAÇÃO DE SESSÃO ATIVA NO NAVEGADOR
   const usuarioSalvo = localStorage.getItem("usuarioLogado");
   if (usuarioSalvo) {
     abrirSistema(usuarioSalvo);
   }
 
-  // SUBMISSÃO DO FORMULÁRIO DE LOGIN
   if (formLogin) {
     formLogin.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -157,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // BOTAO DE SAIDA DO SISTEMA
   if (btnLogout) {
     btnLogout.addEventListener("click", (event) => {
       event.preventDefault();

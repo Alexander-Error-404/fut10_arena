@@ -201,16 +201,18 @@ export function renderizarListaAlunos() {
 
   const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
 
-  atualizarFiltroTurmas(listaAlunos);
+// BLOCO: COMBOBOX DINÂMICO DE TURMAS (BUSCA)
+function atualizarFiltroTurmas(listaAlunos) {
+  // Busca especificamente pelo id filtro-turma para nao afetar o login
+  const selectTurma = document.getElementById("filtro-turma");
+  if (!selectTurma) return;
 
-  const termoBusca = (document.getElementById("busca-nome")?.value || "").toLowerCase();
-  const turmaSelecionada = document.getElementById("filtro-turma")?.value || "";
+  const turmaAtual = selectTurma.value;
+  const turmasUnicas = [...new Set(listaAlunos.map((a) => a.turma).filter(Boolean))];
 
-  const alunosFiltrados = listaAlunos.filter((aluno) => {
-    const atendeNome = (aluno.nome || "").toLowerCase().includes(termoBusca);
-    const atendeTurma = !turmaSelecionada || aluno.turma === turmaSelecionada;
-    return atendeNome && atendeTurma;
-  });
+  selectTurma.innerHTML = `<option value="">Todas as Turmas</option>` +
+    turmasUnicas.map((t) => `<option value="${t}" ${t === turmaAtual ? "selected" : ""}>${t}</option>`).join("");
+}
 
   if (alunosFiltrados.length === 0) {
     container.innerHTML = `
