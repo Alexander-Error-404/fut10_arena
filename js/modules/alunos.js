@@ -1,8 +1,8 @@
 /* ==========================================================================
-   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js) - PARTE 1
+   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js)
    ========================================================================== */
 
-// BLOCO 1: CONTROLE DE ABERTURA E FECHAMENTO DO MODAL
+// 1. CONTROLE DE ABERTURA E FECHAMENTO DO MODAL
 export function abrirModalAluno() {
   const modal = document.getElementById("modal-aluno");
   if (modal) {
@@ -17,9 +17,20 @@ export function fecharModalAluno() {
     modal.classList.remove("active");
     modal.style.display = "none";
   }
+  const form = document.getElementById("formAluno");
+  if (form) form.reset();
+
+  const inputId = document.getElementById("aluno-id");
+  if (inputId) inputId.value = "";
+
+  const preview = document.getElementById("foto-preview");
+  if (preview) {
+    preview.innerHTML = "📸";
+    delete preview.dataset.fotoBase64;
+  }
 }
 
-// BLOCO 2: PROCESSAMENTO E CONVERSÃO DA FOTO DO ALUNO
+// 2. PROCESSAMENTO DA FOTO DO ALUNO
 export function processarFotoAluno(event) {
   const file = event.target.files[0];
   if (file) {
@@ -35,7 +46,7 @@ export function processarFotoAluno(event) {
   }
 }
 
-// BLOCO 3: CÁLCULO DE IDADE AUTOMÁTICO
+// 3. CÁLCULO AUTOMÁTICO DA IDADE
 export function calcularIdadeAutomatica(dataNascimento) {
   if (!dataNascimento) return "";
   const hoje = new Date();
@@ -48,19 +59,17 @@ export function calcularIdadeAutomatica(dataNascimento) {
   return idade >= 0 ? `${idade} anos` : "";
 }
 
-// BLOCO 4: CAPTURA COMPLETA DOS DADOS DO FORMULÁRIO
+// 4. CAPTURA DOS DADOS DO FORMULÁRIO
 function capturarDadosFormulario() {
   const fotoPreview = document.getElementById("foto-preview");
-  const campoDataNasc = document.getElementById("data-nasc") || document.getElementById("aluno-nascimento");
+  const campoDataNasc = document.getElementById("data-nasc");
   const dataNasc = campoDataNasc?.value || "";
 
-  // Se nao houver foto enviada, atribui a foto padrao da bola (SVG/Emoji formatado)
   const fotoPadraoBola = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%2313335c'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='50'>⚽</text></svg>";
 
   return {
     id: document.getElementById("aluno-id")?.value || Date.now().toString(),
     foto: fotoPreview?.dataset?.fotoBase64 || fotoPadraoBola,
-    temFotoEnviada: !!fotoPreview?.dataset?.fotoBase64,
     nome: document.getElementById("aluno-nome")?.value || "",
     status: document.getElementById("aluno-status-exibicao")?.value || "ATIVO",
     dataNascimento: dataNasc,
@@ -74,10 +83,10 @@ function capturarDadosFormulario() {
     camiseta: document.getElementById("aluno-camiseta")?.value || "",
     short: document.getElementById("aluno-short")?.value || "",
     meiao: document.getElementById("aluno-meiao")?.value || "",
-    dataMatricula: (document.getElementById("aluno-matricula") || document.getElementById("aluno-data-matricula"))?.value || "",
-    cpfCrianca: (document.getElementById("aluno-cpf-crianca") || document.getElementById("aluno-cpf"))?.value || "",
+    dataMatricula: document.getElementById("aluno-matricula")?.value || "",
+    cpfCrianca: document.getElementById("aluno-cpf-crianca")?.value || "",
     responsavel: document.getElementById("aluno-responsavel")?.value || "",
-    cpfResponsavel: (document.getElementById("aluno-cpf-resp") || document.getElementById("aluno-cpf-responsavel"))?.value || "",
+    cpfResponsavel: document.getElementById("aluno-cpf-resp")?.value || "",
     whatsapp: document.getElementById("aluno-whatsapp")?.value || "",
     emergencia: document.getElementById("aluno-emergencia")?.value || "",
     retirada: document.getElementById("aluno-retirada")?.value || "",
@@ -90,38 +99,28 @@ function capturarDadosFormulario() {
     carteirinha: document.getElementById("aluno-carteirinha")?.value || ""
   };
 }
-/* ==========================================================================
-   FUT 10 ARENA - MÓDULO DE GESTÃO DE ALUNOS (js/modules/alunos.js) - PARTE 2
-   ========================================================================== */
 
-// BLOCO 5: VALIDAÇÃO RIGOROSA E SALVAMENTO NO LOCALSTORAGE
+// 5. SALVAR OU EDITAR ALUNO NO LOCALSTORAGE
 export function salvarAluno(event) {
   if (event) event.preventDefault();
 
   const a = capturarDadosFormulario();
 
-  // 1. Validação da Aba Técnico + Foto
-  if (!a.nome.trim() || !a.dataNascimento || !a.turma || !a.frequencia || !a.horario || 
-      !a.posicao || !a.pe || !a.camiseta || !a.short || !a.meiao || !a.dataMatricula || !a.cpfCrianca) {
-    alert("⚠️ Preencha TODOS os campos obrigatórios da aba TÉCNICO!");
+  if (!a.nome.trim() || !a.dataNascimento || !a.turma || !a.responsavel.trim() || !a.whatsapp.trim()) {
+    alert("⚠️ Preencha os campos obrigatórios (Nome, Nascimento, Turma, Responsável e WhatsApp)!");
     return;
   }
 
-  // 2. Validação da Aba Família
-  if (!a.responsavel.trim() || !a.cpfResponsavel.trim() || !a.whatsapp.trim() || !a.emergencia.trim() || !a.retirada.trim()) {
-    alert("⚠️ Preencha TODOS os campos obrigatórios da aba FAMÍLIA!");
-    return;
-  }
-
-  // Gravação no localStorage
   try {
     let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
     const indexExistente = listaAlunos.findIndex((item) => item.id === a.id);
 
     if (indexExistente >= 0) {
       listaAlunos[indexExistente] = a;
+      alert("✅ Alterações do aluno salvas com sucesso!");
     } else {
       listaAlunos.unshift(a);
+      alert("✅ Novo aluno cadastrado com sucesso!");
     }
 
     localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
@@ -130,70 +129,206 @@ export function salvarAluno(event) {
     return;
   }
 
-  // Limpeza do formulário
-  const form = document.getElementById("formAluno");
-  if (form) form.reset();
-
-  const preview = document.getElementById("foto-preview");
-  if (preview) {
-    preview.innerHTML = "📸";
-    delete preview.dataset.fotoBase64;
-  }
-
   fecharModalAluno();
   renderizarListaAlunos();
-
-  alert("✅ Aluno cadastrado com sucesso!");
 }
 
-// BLOCO 6: RENDERIZAR CARDS DOS ALUNOS NA TELA (FOTO DA BOLA POR PADRÃO)
+// 6. CARREGAR ALUNO NO MODAL PARA EDIÇÃO
+export function preencherModalParaEdicao(alunoId) {
+  const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+  const aluno = listaAlunos.find((item) => item.id === alunoId);
+
+  if (!aluno) return;
+
+  document.getElementById("aluno-id").value = aluno.id;
+  document.getElementById("aluno-nome").value = aluno.nome || "";
+  document.getElementById("aluno-status-exibicao").value = aluno.status || "ATIVO";
+  document.getElementById("data-nasc").value = aluno.dataNascimento || "";
+  document.getElementById("idade-aluno").value = aluno.idade || "";
+  document.getElementById("aluno-turma").value = aluno.turma || "";
+  document.getElementById("aluno-frequencia").value = aluno.frequencia || "";
+  document.getElementById("select-habilidade").value = aluno.habilidade || "⭐";
+  document.getElementById("aluno-horario").value = aluno.horario || "";
+  document.getElementById("aluno-posicao").value = aluno.posicao || "Goleiro";
+  document.getElementById("aluno-pe").value = aluno.pe || "Destro";
+  document.getElementById("aluno-camiseta").value = aluno.camiseta || "";
+  document.getElementById("aluno-short").value = aluno.short || "";
+  document.getElementById("aluno-meiao").value = aluno.meiao || "";
+  document.getElementById("aluno-matricula").value = aluno.dataMatricula || "";
+  document.getElementById("aluno-cpf-crianca").value = aluno.cpfCrianca || "";
+  document.getElementById("aluno-responsavel").value = aluno.responsavel || "";
+  document.getElementById("aluno-cpf-resp").value = aluno.cpfResponsavel || "";
+  document.getElementById("aluno-whatsapp").value = aluno.whatsapp || "";
+  document.getElementById("aluno-emergencia").value = aluno.emergencia || "";
+  document.getElementById("aluno-retirada").value = aluno.retirada || "";
+  document.getElementById("tem-irmao").checked = !!aluno.temIrmao;
+  document.getElementById("atestado-dia").checked = !!aluno.atestadoDia;
+  document.getElementById("uso-imagem").checked = !!aluno.usoImagem;
+  document.getElementById("aluno-saude").value = aluno.restricoesSaude || "";
+  document.getElementById("aluno-alergias").value = aluno.alergias || "";
+  document.getElementById("aluno-convenio").value = aluno.convenio || "";
+  document.getElementById("aluno-carteirinha").value = aluno.carteirinha || "";
+
+  const preview = document.getElementById("foto-preview");
+  if (preview && aluno.foto) {
+    preview.innerHTML = `<img src="${aluno.foto}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+    preview.dataset.fotoBase64 = aluno.foto;
+  }
+
+  abrirModalAluno();
+}
+
+// 7. EXCLUIR ALUNO COM CONFIRMAÇÃO
+export function excluirAluno(alunoId, nomeAluno) {
+  const confirmou = confirm(`⚠️ Tem certeza que deseja EXCLUIR o cadastro de "${nomeAluno}"?\nEsta ação não poderá ser desfeita.`);
+  if (!confirmou) return;
+
+  try {
+    let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+    listaAlunos = listaAlunos.filter((item) => item.id !== alunoId);
+    localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
+    renderizarListaAlunos();
+    alert("🗑️ Aluno removido com sucesso!");
+  } catch (erro) {
+    alert("Erro ao excluir aluno.");
+  }
+}
+
+// 8. RENDERIZAR CARDS DOS ALUNOS COM FILTROS E LINK DO WHATSAPP
 export function renderizarListaAlunos() {
   const container = document.getElementById("alunos-lista");
   if (!container) return;
 
   const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
 
-  if (listaAlunos.length === 0) {
+  atualizarFiltroTurmas(listaAlunos);
+
+  const termoBusca = (document.getElementById("busca-nome")?.value || "").toLowerCase();
+  const turmaSelecionada = document.getElementById("filtro-turma")?.value || "";
+
+  const alunosFiltrados = listaAlunos.filter((aluno) => {
+    const atendeNome = (aluno.nome || "").toLowerCase().includes(termoBusca);
+    const atendeTurma = !turmaSelecionada || aluno.turma === turmaSelecionada;
+    return atendeNome && atendeTurma;
+  });
+
+  if (alunosFiltrados.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; padding:30px 15px; color:#dae3ef;">
-        <p style="font-size: 16px; margin-bottom: 5px;">Nenhum aluno cadastrado ainda.</p>
-        <small>Clique no botão <strong>+</strong> acima para realizar o primeiro cadastro.</small>
+        <p style="font-size: 16px; margin-bottom: 5px;">Nenhum aluno encontrado.</p>
+        <small>Verifique os filtros ou cadastre um novo aluno.</small>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = listaAlunos
+  container.innerHTML = alunosFiltrados
     .map((aluno) => {
-      // Exibe a foto cadastrada ou a foto da bola de futebol por padrão
       const fotoHtml = `<img src="${aluno.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">`;
+      const numeroLimpo = (aluno.whatsapp || "").replace(/\D/g, "");
+      const linkWhatsapp = numeroLimpo ? `https://wa.me/55${numeroLimpo}` : "#";
 
       return `
-        <div class="aluno-card">
-          <div class="aluno-header">
-            <div class="aluno-foto-perfil ${aluno.status === 'ATIVO' ? 'status-ativo' : 'status-inativo'}">
+        <div class="aluno-card" style="background:#0b1d3a; border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid #1e3a63; position:relative;">
+          
+          <div style="display:flex; align-items:flex-start; gap:12px;">
+            <div class="aluno-foto-perfil" style="flex-shrink:0;">
               ${fotoHtml}
             </div>
-            <div>
-              <h4 style="margin:0; font-size:1rem; color:#ffffff;">${aluno.nome}</h4>
-              <span class="badge-categoria">${aluno.turma || "SEM TURMA"}</span>
+            
+            <div style="flex:1; min-width:0;" onclick="window.preencherModalParaEdicao('${aluno.id}')">
+              <h4 style="margin:0; font-size:1rem; color:#ffffff; font-weight:bold; word-break:break-word;">
+                ${aluno.nome}
+              </h4>
+              <div style="font-size:0.85rem; margin:4px 0; color:#ffd700;">
+                ${aluno.habilidade}
+              </div>
+              <span class="badge-categoria" style="display:inline-block; background:#d32f2f; color:#fff; font-size:0.7rem; padding:2px 6px; border-radius:4px; font-weight:bold;">
+                ${aluno.turma || "SEM TURMA"}
+              </span>
             </div>
-            <div class="aluno-estrelas">${aluno.habilidade}</div>
+
+            <button onclick="window.excluirAluno('${aluno.id}', '${aluno.nome}')" title="Excluir Aluno" style="background:transparent; border:none; color:#ff5252; font-size:1.2rem; cursor:pointer; padding:2px 6px;">
+              🗑️
+            </button>
           </div>
-          <div class="aluno-detalhes">
-            <p><strong>Posição:</strong> ${aluno.posicao} | <strong>Pé:</strong> ${aluno.pe}</p>
-            <p><strong>Responsável:</strong> ${aluno.responsavel} (${aluno.whatsapp})</p>
+
+          <div style="font-size:0.82rem; color:#dae3ef; border-top:1px solid #1a3356; margin-top:10px; padding-top:8px;">
+            <p style="margin:3px 0;" onclick="window.preencherModalParaEdicao('${aluno.id}')">
+              <strong>Posição:</strong> ${aluno.posicao || 'N/A'} | <strong>Pé:</strong> ${aluno.pe || 'N/A'}
+            </p>
+            <p style="margin:5px 0;">
+              <strong>Responsável:</strong> ${aluno.responsavel} 
+              ${
+                numeroLimpo 
+                  ? `<a href="${linkWhatsapp}" target="_blank" style="color:#25d366; text-decoration:none; font-weight:bold; margin-left:5px; background:rgba(37,211,102,0.15); padding:2px 6px; border-radius:4px;">
+                      💬 ${aluno.whatsapp}
+                     </a>`
+                  : `(${aluno.whatsapp})`
+              }
+            </p>
           </div>
+
         </div>
       `;
     })
     .join("");
 }
 
-// BLOCO 7: ESCUTADOR DE EVENTOS DE FILTROS E BUSCA
+// 9. COMBOBOX DINÂMICO DE TURMAS
+function atualizarFiltroTurmas(listaAlunos) {
+  const selectTurma = document.getElementById("filtro-turma") || document.querySelector("select");
+  if (!selectTurma) return;
+
+  if (!selectTurma.id) selectTurma.id = "filtro-turma";
+
+  const turmaAtual = selectTurma.value;
+  const turmasUnicas = [...new Set(listaAlunos.map((a) => a.turma).filter(Boolean))];
+
+  selectTurma.innerHTML = `<option value="">Todas as Turmas</option>` +
+    turmasUnicas.map((t) => `<option value="${t}" ${t === turmaAtual ? "selected" : ""}>${t}</option>`).join("");
+}
+
+// 10. MÁSCARAS DE ENTRADA E ESCUTADORES DE EVENTOS
 export function inicializarEventosFiltros() {
   const buscaNome = document.getElementById("busca-nome");
-  if (buscaNome) {
-    buscaNome.addEventListener("input", renderizarListaAlunos);
+  if (buscaNome) buscaNome.addEventListener("input", renderizarListaAlunos);
+
+  const filtroTurma = document.getElementById("filtro-turma") || document.querySelector("select");
+  if (filtroTurma) {
+    filtroTurma.addEventListener("change", renderizarListaAlunos);
+  }
+
+  aplicarMascaraInput("aluno-cpf-crianca", mascararCPF);
+  aplicarMascaraInput("aluno-cpf-resp", mascararCPF);
+  aplicarMascaraInput("aluno-whatsapp", mascararTelefone);
+  aplicarMascaraInput("aluno-emergencia", mascararTelefone);
+}
+
+function aplicarMascaraInput(id, funcaoMascara) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("input", (e) => {
+      e.target.value = funcaoMascara(e.target.value);
+    });
   }
 }
+
+function mascararCPF(v) {
+  v = v.replace(/\D/g, "").slice(0, 11);
+  v = v.replace(/(\d{3})(\d)/, "$1.$2");
+  v = v.replace(/(\d{3})(\d)/, "$1.$2");
+  v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  return v;
+}
+
+function mascararTelefone(v) {
+  v = v.replace(/\D/g, "").slice(0, 11);
+  v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+  v = v.replace(/(\d{5})(\d)/, "$1-$2");
+  return v;
+}
+
+// EXPOSIÇÃO GLOBAL DE FUNÇÕES
+window.preencherModalParaEdicao = preencherModalParaEdicao;
+window.excluirAluno = excluirAluno;

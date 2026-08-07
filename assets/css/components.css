@@ -209,22 +209,23 @@
    ========================================================================== */
 
 /* Fundo escuro atrás do modal (cobre a tela inteira) */
+/* ==========================================================================
+   ARQUIVO: assets/css/components.css (Trecho do Modal Overlay)
+   ========================================================================== */
+
 .modal-overlay {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.85); /* Fundo escuro cobrindo o fundo */
+  background-color: rgba(0, 0, 0, 0.85) !important; /* Escurece 85% a tela ao fundo */
+  z-index: 9999;
+  display: none;
+  align-items: flex-end; /* Abre no estilo bottom-sheet para mobile */
   justify-content: center;
-  align-items: flex-end; /* Mantém o modal surgindo de baixo */
-  z-index: 10000; /* Fica acima de tudo enquanto estiver aberto */
 }
 
-/* Exibe o modal apenas quando ativo */
 .modal-overlay.active {
   display: flex !important;
 }
