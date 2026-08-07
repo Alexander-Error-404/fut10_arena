@@ -59,55 +59,63 @@ export function calcularIdadeAutomatica(dataNascimento) {
   return idade >= 0 ? `${idade} anos` : "";
 }
 
-// 4. CAPTURA DOS DADOS DO FORMULÁRIO
+// 4. CAPTURA E PADRONIZAÇÃO DE DADOS (MAIÚSCULAS)
 function capturarDadosFormulario() {
   const fotoPreview = document.getElementById("foto-preview");
   const campoDataNasc = document.getElementById("data-nasc");
   const dataNasc = campoDataNasc?.value || "";
+
+  const maiusculo = (id) => (document.getElementById(id)?.value || "").toUpperCase().trim();
 
   const fotoPadraoBola = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%2313335c'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='50'>⚽</text></svg>";
 
   return {
     id: document.getElementById("aluno-id")?.value || Date.now().toString(),
     foto: fotoPreview?.dataset?.fotoBase64 || fotoPadraoBola,
-    nome: document.getElementById("aluno-nome")?.value || "",
+    nome: maiusculo("aluno-nome"),
     status: document.getElementById("aluno-status-exibicao")?.value || "ATIVO",
     dataNascimento: dataNasc,
     idade: calcularIdadeAutomatica(dataNasc),
-    turma: document.getElementById("aluno-turma")?.value || "",
+    turma: maiusculo("aluno-turma"),
     frequencia: document.getElementById("aluno-frequencia")?.value || "",
     habilidade: document.getElementById("select-habilidade")?.value || "⭐",
-    horario: document.getElementById("aluno-horario")?.value || "",
+    horario: maiusculo("aluno-horario"),
     posicao: document.getElementById("aluno-posicao")?.value || "",
     pe: document.getElementById("aluno-pe")?.value || "",
-    camiseta: document.getElementById("aluno-camiseta")?.value || "",
-    short: document.getElementById("aluno-short")?.value || "",
-    meiao: document.getElementById("aluno-meiao")?.value || "",
+    camiseta: maiusculo("aluno-camiseta"),
+    short: maiusculo("aluno-short"),
+    meiao: maiusculo("aluno-meiao"),
     dataMatricula: document.getElementById("aluno-matricula")?.value || "",
     cpfCrianca: document.getElementById("aluno-cpf-crianca")?.value || "",
-    responsavel: document.getElementById("aluno-responsavel")?.value || "",
+    responsavel: maiusculo("aluno-responsavel"),
     cpfResponsavel: document.getElementById("aluno-cpf-resp")?.value || "",
     whatsapp: document.getElementById("aluno-whatsapp")?.value || "",
     emergencia: document.getElementById("aluno-emergencia")?.value || "",
-    retirada: document.getElementById("aluno-retirada")?.value || "",
+    retirada: maiusculo("aluno-retirada"),
     temIrmao: document.getElementById("tem-irmao")?.checked || false,
     atestadoDia: document.getElementById("atestado-dia")?.checked || false,
     usoImagem: document.getElementById("uso-imagem")?.checked || false,
-    restricoesSaude: document.getElementById("aluno-saude")?.value || "",
-    alergias: document.getElementById("aluno-alergias")?.value || "",
-    convenio: document.getElementById("aluno-convenio")?.value || "",
-    carteirinha: document.getElementById("aluno-carteirinha")?.value || ""
+    restricoesSaude: maiusculo("aluno-saude"),
+    alergias: maiusculo("aluno-alergias"),
+    convenio: maiusculo("aluno-convenio"),
+    carteirinha: maiusculo("aluno-carteirinha")
   };
 }
 
-// 5. SALVAR OU EDITAR ALUNO NO LOCALSTORAGE
+// 5. SALVAR OU EDITAR ALUNO COM VALIDAÇÃO COMPLETA DE TODOS OS CAMPOS
 export function salvarAluno(event) {
   if (event) event.preventDefault();
 
   const a = capturarDadosFormulario();
 
-  if (!a.nome.trim() || !a.dataNascimento || !a.turma || !a.responsavel.trim() || !a.whatsapp.trim()) {
-    alert("⚠️ Preencha os campos obrigatórios (Nome, Nascimento, Turma, Responsável e WhatsApp)!");
+  if (
+    !a.nome || !a.dataNascimento || !a.turma || !a.frequencia || 
+    !a.horario || !a.posicao || !a.pe || !a.camiseta || !a.short || !a.meiao ||
+    !a.dataMatricula || !a.cpfCrianca || !a.responsavel || !a.cpfResponsavel || 
+    !a.whatsapp || !a.emergencia || !a.retirada ||
+    !a.restricoesSaude || !a.alergias || !a.convenio || !a.carteirinha
+  ) {
+    alert("⚠️ ATENÇÃO: Todos os campos das 3 abas (Técnico, Família e Saúde) devem ser preenchidos!");
     return;
   }
 
@@ -137,7 +145,6 @@ export function salvarAluno(event) {
 export function preencherModalParaEdicao(alunoId) {
   const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
   const aluno = listaAlunos.find((item) => item.id === alunoId);
-
   if (!aluno) return;
 
   document.getElementById("aluno-id").value = aluno.id;
@@ -146,7 +153,7 @@ export function preencherModalParaEdicao(alunoId) {
   document.getElementById("data-nasc").value = aluno.dataNascimento || "";
   document.getElementById("idade-aluno").value = aluno.idade || "";
   document.getElementById("aluno-turma").value = aluno.turma || "";
-  document.getElementById("aluno-frequencia").value = aluno.frequencia || "";
+  document.getElementById("aluno-frequencia").value = aluno.frequencia || "1x na semana";
   document.getElementById("select-habilidade").value = aluno.habilidade || "⭐";
   document.getElementById("aluno-horario").value = aluno.horario || "";
   document.getElementById("aluno-posicao").value = aluno.posicao || "Goleiro";
@@ -194,16 +201,8 @@ export function excluirAluno(alunoId, nomeAluno) {
   }
 }
 
-// 8. RENDERIZAR CARDS DOS ALUNOS COM FILTROS E LINK DO WHATSAPP
-export function renderizarListaAlunos() {
-  const container = document.getElementById("alunos-lista");
-  if (!container) return;
-
-  const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
-
-// BLOCO: COMBOBOX DINÂMICO DE TURMAS (BUSCA)
+// 8. COMBOBOX DINÂMICO DE TURMAS
 function atualizarFiltroTurmas(listaAlunos) {
-  // Busca especificamente pelo id filtro-turma para nao afetar o login
   const selectTurma = document.getElementById("filtro-turma");
   if (!selectTurma) return;
 
@@ -213,6 +212,24 @@ function atualizarFiltroTurmas(listaAlunos) {
   selectTurma.innerHTML = `<option value="">Todas as Turmas</option>` +
     turmasUnicas.map((t) => `<option value="${t}" ${t === turmaAtual ? "selected" : ""}>${t}</option>`).join("");
 }
+
+// 9. RENDERIZAR CARDS DOS ALUNOS COM FILTROS E LINK DO WHATSAPP
+export function renderizarListaAlunos() {
+  const container = document.getElementById("alunos-lista");
+  if (!container) return;
+
+  const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+
+  atualizarFiltroTurmas(listaAlunos);
+
+  const termoBusca = (document.getElementById("busca-nome")?.value || "").toLowerCase();
+  const turmaSelecionada = document.getElementById("filtro-turma")?.value || "";
+
+  const alunosFiltrados = listaAlunos.filter((aluno) => {
+    const atendeNome = (aluno.nome || "").toLowerCase().includes(termoBusca);
+    const atendeTurma = !turmaSelecionada || aluno.turma === turmaSelecionada;
+    return atendeNome && atendeTurma;
+  });
 
   if (alunosFiltrados.length === 0) {
     container.innerHTML = `
@@ -232,7 +249,6 @@ function atualizarFiltroTurmas(listaAlunos) {
 
       return `
         <div class="aluno-card" style="background:#0b1d3a; border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid #1e3a63; position:relative;">
-          
           <div style="display:flex; align-items:flex-start; gap:12px;">
             <div class="aluno-foto-perfil" style="flex-shrink:0;">
               ${fotoHtml}
@@ -270,25 +286,10 @@ function atualizarFiltroTurmas(listaAlunos) {
               }
             </p>
           </div>
-
         </div>
       `;
     })
     .join("");
-}
-
-// 9. COMBOBOX DINÂMICO DE TURMAS
-function atualizarFiltroTurmas(listaAlunos) {
-  const selectTurma = document.getElementById("filtro-turma") || document.querySelector("select");
-  if (!selectTurma) return;
-
-  if (!selectTurma.id) selectTurma.id = "filtro-turma";
-
-  const turmaAtual = selectTurma.value;
-  const turmasUnicas = [...new Set(listaAlunos.map((a) => a.turma).filter(Boolean))];
-
-  selectTurma.innerHTML = `<option value="">Todas as Turmas</option>` +
-    turmasUnicas.map((t) => `<option value="${t}" ${t === turmaAtual ? "selected" : ""}>${t}</option>`).join("");
 }
 
 // 10. MÁSCARAS DE ENTRADA E ESCUTADORES DE EVENTOS
@@ -296,7 +297,7 @@ export function inicializarEventosFiltros() {
   const buscaNome = document.getElementById("busca-nome");
   if (buscaNome) buscaNome.addEventListener("input", renderizarListaAlunos);
 
-  const filtroTurma = document.getElementById("filtro-turma") || document.querySelector("select");
+  const filtroTurma = document.getElementById("filtro-turma");
   if (filtroTurma) {
     filtroTurma.addEventListener("change", renderizarListaAlunos);
   }
@@ -333,4 +334,4 @@ function mascararTelefone(v) {
 
 // EXPOSIÇÃO GLOBAL DE FUNÇÕES
 window.preencherModalParaEdicao = preencherModalParaEdicao;
-window.excluirAluno = excluirAluno;
+window.excluirAluno = excluirAluno; 

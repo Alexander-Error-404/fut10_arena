@@ -14,24 +14,15 @@
 </head>
 <body>
 
-  <!-- ==========================================================================
-       TELA 1: LOGIN DO SISTEMA (MODO MOBILE-FIRST)
-       ========================================================================== -->
+  <!-- TELA 1: LOGIN DO SISTEMA -->
   <section id="login-screen" class="login-container screen-active">
     <div class="login-card">
-      
-      <!-- Logo e Títulos da Aplicação -->
       <img src="assets/images/logo.png" alt="FUT 10 Arena" class="login-logo" />
       <h1 class="login-title">FUT 10 Arena</h1>
       <p class="login-subtitle">Sistema de Gestão Escolinha & Cantina</p>
-
-      <!-- Mensagem de Erro -->
       <div id="error-message" class="error-message"></div>
 
-      <!-- Formulário de Autenticação -->
       <form id="form-login">
-        
-        <!-- Seleção de Operador -->
         <div class="form-group">
           <label for="select-usuario">Quem está acessando?</label>
           <select id="select-usuario" class="form-control">
@@ -41,33 +32,18 @@
           </select>
         </div>
 
-        <!-- Campo de Senha -->
         <div class="form-group">
           <label for="input-senha">Senha de Acesso</label>
-          <input 
-            type="password" 
-            id="input-senha" 
-            class="form-control" 
-            placeholder="Digite sua senha" 
-          />
+          <input type="password" id="input-senha" class="form-control" placeholder="Digite sua senha" />
         </div>
 
-        <!-- Botão Principal em Destaque Vermelho -->
-        <button type="submit" class="btn-login-submit">
-          ENTRAR NO SISTEMA
-        </button>
-
+        <button type="submit" class="btn-login-submit">ENTRAR NO SISTEMA</button>
       </form>
-      
     </div>
   </section>
 
-  <!-- ==========================================================================
-       TELA 2: ÁREA PRINCIPAL DO SISTEMA (PAINEL / APP)
-       ========================================================================== -->
+  <!-- TELA 2: ÁREA PRINCIPAL DO SISTEMA -->
   <main id="app-screen" class="app-container screen-hidden">
-    
-    <!-- Cabeçalho Principal com Informações do Usuário Logado -->
     <header class="app-header">
       <div class="user-info">
         <span id="user-display-name" class="user-name">Usuário</span>
@@ -76,13 +52,9 @@
       <button id="btn-logout" class="btn-logout">Sair</button>
     </header>
 
-    <!-- Conteúdo Dinâmico do Dashboard e Módulos -->
     <section id="main-content" class="content-area">
-
-      <!-- BLOCO: DASHBOARD - KPIS E PAINEL DE CONTROLE -->
+      <!-- DASHBOARD -->
       <div id="dashboard-screen" class="dashboard-container">
-
-        <!-- SUB-BLOCO: INDICADORES RÁPIDOS (KPIS) -->
         <div class="indicadores-container">
           <div class="card-indicador">
             <div class="ind-icon">👥</div>
@@ -105,7 +77,6 @@
               <p>Itens a Acabar (Bar)</p>
             </div>
           </div>
-
           <div class="card-indicador border-estoque">
             <div class="ind-icon">💸</div>
             <div class="ind-info">
@@ -113,14 +84,11 @@
               <p>Fiado Cantina (A Receber)</p>
             </div>
           </div>
-        </div> <!-- Fim dos Indicadores -->
+        </div>
 
         <h3>Painel de Controle</h3>
 
-        <!-- MENU DE ATALHOS RÁPIDOS (PAINEL SUPERIOR) -->
         <div class="menu-grid">
-
-          <!-- 1. Alunos (Ambos) -->
           <button type="button" class="menu-card menu-ambos" data-target="alunos" onclick="navegarPara('alunos-screen')">
             <div class="card-icon">👥</div>
             <div class="card-info">
@@ -129,7 +97,6 @@
             </div>
           </button>
 
-          <!-- 2. Chamada (Vinícius) -->
           <button type="button" class="menu-card menu-vinicius" data-target="chamada" onclick="navegarPara('chamada-screen')">
             <div class="card-icon">📋</div>
             <div class="card-info">
@@ -138,7 +105,6 @@
             </div>
           </button>
 
-          <!-- 3. Cantina (Alessandra) -->
           <button type="button" class="menu-card menu-alessandra" data-target="cantina" onclick="navegarPara('cantina-screen')">
             <div class="card-icon">🍿</div>
             <div class="card-info">
@@ -147,7 +113,6 @@
             </div>
           </button>
 
-          <!-- 4. Mensalidades (Alessandra) -->
           <button type="button" class="menu-card menu-alessandra" data-target="mensalidades" onclick="navegarPara('financeiro-screen')">
             <div class="card-icon">💰</div>
             <div class="card-info">
@@ -156,7 +121,6 @@
             </div>
           </button>
 
-          <!-- 5. Configurações (Ambos) -->
           <button type="button" class="menu-card menu-ambos" data-target="configuracoes" onclick="navegarPara('configuracoes-screen')">
             <div class="card-icon">⚙️</div>
             <div class="card-info">
@@ -165,7 +129,6 @@
             </div>
           </button>
 
-          <!-- 6. Financeiro (Alessandra) -->
           <button type="button" class="menu-card menu-alessandra" data-target="financeiro" onclick="navegarPara('relatorios-screen')">
             <div class="card-icon">📊</div>
             <div class="card-info">
@@ -174,7 +137,6 @@
             </div>
           </button>
 
-          <!-- 7. Campo Tático (Vinícius) -->
           <button type="button" class="menu-card menu-vinicius" data-target="treinos" onclick="navegarPara('tatico-screen')">
             <div class="card-icon">⚽</div>
             <div class="card-info">
@@ -182,29 +144,19 @@
               <p>Posicionamento e treinos interativos</p>
             </div>
           </button>
+        </div>
+      </div>
 
-        </div> <!-- Fim da Grid do Menu -->
-
-      </div> <!-- Fim do dashboard-screen -->
-
-      <!-- ==========================================================================
-           MÓDULO: GERENCIAMENTO DE ALUNOS (LISTAGEM & FILTROS)
-           ========================================================================== -->
+      <!-- MÓDULO ALUNOS -->
       <section id="alunos-screen" class="screen-hidden">
-        
-        <!-- CABEÇALHO DO MÓDULO -->
         <div class="module-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
           <h2>Gestão de Alunos</h2>
-          <!-- Botão para abrir o modal de cadastro -->
           <button id="btn-novo-aluno" class="btn-add" onclick="abrirModalAluno()">+</button>
         </div>
 
-        <!-- BARRA DE PESQUISA E FILTROS COMBINADOS -->
         <section class="filtros-container">
           <input type="text" id="busca-nome" placeholder="🔍 Buscar aluno pelo nome...">
-<!-- BLOCO: SELETORES DE FILTRO DE ALUNOS -->
           <div class="filtros-seletores">
-            <!-- Select de turmas corrigido com o ID correto -->
             <select id="filtro-turma">
               <option value="">Todas as Turmas</option>
             </select>
@@ -224,34 +176,27 @@
           </div>
         </section>
 
-        <!-- CONTAINER ONDE OS CARDS DOS ALUNOS SERÃO RENDERIZADOS DINAMICAMENTE -->
         <main class="alunos-lista" id="alunos-lista"></main>
-
       </section>
 
-      <!-- ==========================================================================
-           MODAL: FICHA COMPLETA DO ALUNO (ESTILO MOBILE BOTTOM-SHEET)
-           ========================================================================== -->
+      <!-- MODAL ALUNO -->
       <div id="modal-aluno" class="modal-overlay">
         <div class="modal-content">
-          
-          <!-- CABEÇALHO DO MODAL -->
           <div class="modal-header">
             <h3>Ficha Completa do Aluno</h3>
             <button type="button" id="btn-fechar-modal" class="btn-fechar" onclick="fecharModalAluno()">&times;</button>
           </div>
-          <!-- NAVEGAÇÃO DE ABAS DO FORMULÁRIO -->
+
           <div class="tab-menu">
             <button type="button" class="tab-btn active" data-tab="dados-tecnicos">⚽ Técnico</button>
             <button type="button" class="tab-btn" data-tab="dados-responsaveis">👥 Família</button>
             <button type="button" class="tab-btn" data-tab="dados-saude">🏥 Saúde/Legal</button>
           </div>
 
-          <!-- FORMULÁRIO UNIFICADO -->
           <form id="formAluno">
             <input type="hidden" id="aluno-id">
 
-            <!-- ABA 1: DADOS TÉCNICOS E UNIFORME -->
+            <!-- ABA 1: TÉCNICO -->
             <div id="dados-tecnicos" class="tab-content active">
               <div class="foto-upload-container">
                 <div class="avatar-preview" id="foto-preview">📸</div>
@@ -264,7 +209,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Nome Completo:</label>
-                  <input type="text" id="aluno-nome" required>
+                  <input type="text" id="aluno-nome">
                 </div>
                 <div class="form-group">
                   <label>Situação do Cadastro:</label>
@@ -275,7 +220,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Data Nascimento:</label>
-                  <input type="date" id="data-nasc" required>
+                  <input type="date" id="data-nasc">
                 </div>
                 <div class="form-group">
                   <label>Idade Calculada:</label>
@@ -286,7 +231,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Turma:</label>
-                  <input type="text" id="aluno-turma" placeholder="Ex: SUB-5" required>
+                  <input type="text" id="aluno-turma" placeholder="Ex: SUB-11">
                 </div>
                 <div class="form-group">
                   <label>Frequência Semanal:</label>
@@ -310,7 +255,7 @@
                 </div>
                 <div class="form-group">
                   <label>Dia / Horário:</label>
-                  <input type="text" id="aluno-horario" placeholder="Ex: Seg e Qua - 08:30" required>
+                  <input type="text" id="aluno-horario" placeholder="Ex: Ter e Qui - 09:00">
                 </div>
               </div>
 
@@ -341,23 +286,23 @@
               </div>
             </div>
 
-            <!-- ABA 2: RESPONSÁVEIS E FAMÍLIA -->
+            <!-- ABA 2: FAMÍLIA -->
             <div id="dados-responsaveis" class="tab-content">
               <div class="form-row">
-                <div class="form-group"><label>Data da Matrícula:</label><input type="date" id="aluno-matricula" required></div>
+                <div class="form-group"><label>Data da Matrícula:</label><input type="date" id="aluno-matricula"></div>
                 <div class="form-group"><label>CPF da Criança:</label><input type="text" class="mask-cpf" id="aluno-cpf-crianca" placeholder="000.000.000-00"></div>
               </div>
-              <div class="form-group"><label>Nome do Responsável:</label><input type="text" id="aluno-responsavel" placeholder="Pai, mãe ou tutor" required></div>
+              <div class="form-group"><label>Nome do Responsável:</label><input type="text" id="aluno-responsavel" placeholder="Pai, mãe ou tutor"></div>
               <div class="form-group"><label>CPF do Responsável:</label><input type="text" class="mask-cpf" id="aluno-cpf-resp" placeholder="000.000.000-00"></div>
               <div class="form-row">
-                <div class="form-group"><label>WhatsApp Principal:</label><input type="tel" class="mask-celular" id="aluno-whatsapp" placeholder="(00) 00000-0000" required></div>
-                <div class="form-group"><label>Número de Emergência:</label><input type="tel" class="mask-celular" id="aluno-emergencia" placeholder="(00) 00000-0000" required></div>
+                <div class="form-group"><label>WhatsApp Principal:</label><input type="tel" class="mask-celular" id="aluno-whatsapp" placeholder="(00) 00000-0000"></div>
+                <div class="form-group"><label>Número de Emergência:</label><input type="tel" class="mask-celular" id="aluno-emergencia" placeholder="(00) 00000-0000"></div>
               </div>
-              <div class="form-group"><label>Quem pode retirar a criança?</label><input type="text" id="aluno-retirada" placeholder="Ex: Mãe Maria ou Avô José" required></div>
+              <div class="form-group"><label>Quem pode retirar a criança?</label><input type="text" id="aluno-retirada" placeholder="Ex: Mãe Maria ou Avô José"></div>
               <div class="checkbox-group"><input type="checkbox" id="tem-irmao"><label for="tem-irmao">Tem irmão matriculado?</label></div>
             </div>
 
-            <!-- ABA 3: SAÚDE E FICHA LEGAL -->
+            <!-- ABA 3: SAÚDE -->
             <div id="dados-saude" class="tab-content">
               <div class="checkbox-group safety-check"><input type="checkbox" id="atestado-dia"><label for="atestado-dia">🩺 Atestado Médico em Dia?</label></div>
               <div class="checkbox-group safety-check"><input type="checkbox" id="uso-imagem"><label for="uso-imagem">📸 Autorização de Uso de Imagem?</label></div>
@@ -369,63 +314,35 @@
               </div>
             </div>
 
-            <!-- BOTÃO DE SALVAR -->
             <button type="submit" class="btn-salvar-aluno">Salvar Ficha do Aluno</button>
           </form>
         </div>
       </div>
 
-      <section id="chamada-screen" class="screen-hidden">
-        <h2>Chamada do Campo</h2>
-        <p>Tela em desenvolvimento...</p>
-      </section>
+      <section id="chamada-screen" class="screen-hidden"><h2>Chamada do Campo</h2><p>Tela em desenvolvimento...</p></section>
+      <section id="configuracoes-screen" class="screen-hidden"><h2>Configurações do Sistema</h2><p>Tela em desenvolvimento...</p></section>
+      <section id="tatico-screen" class="screen-hidden"><h2>Prancheta Tática</h2><p>Tela em desenvolvimento...</p></section>
+      <section id="cantina-screen" class="screen-hidden"><h2>Barzinho / Cantina</h2><p>Tela em desenvolvimento...</p></section>
+      <section id="financeiro-screen" class="screen-hidden"><h2>Gestão de Mensalidades</h2><p>Tela em desenvolvimento...</p></section>
+      <section id="relatorios-screen" class="screen-hidden"><h2>Financeiro / Caixa</h2><p>Tela em desenvolvimento...</p></section>
+    </section>
 
-      <section id="configuracoes-screen" class="screen-hidden">
-        <h2>Configurações do Sistema</h2>
-        <p>Tela em desenvolvimento...</p>
-      </section>
+    <nav class="bottom-nav">
+      <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
+      <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
+      <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">📋</button>
+      <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
+      <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" onclick="navegarPara('tatico-screen')" title="Campo Tático">⚽</button>
+      <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">🍿</button>
+      <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Mensalidades">💰</button>
+      <button type="button" class="nav-bottom-item nav-alessandra" data-target="relatorios-screen" onclick="navegarPara('relatorios-screen')" title="Financeiro / Caixa">📊</button>
+    </nav>
+  </main>
 
-      <section id="tatico-screen" class="screen-hidden">
-        <h2>Prancheta Tática</h2>
-        <p>Tela em desenvolvimento...</p>
-      </section>
-
-      <section id="cantina-screen" class="screen-hidden">
-        <h2>Barzinho / Cantina</h2>
-        <p>Tela em desenvolvimento...</p>
-      </section>
-
-      <section id="financeiro-screen" class="screen-hidden">
-        <h2>Gestão de Mensalidades</h2>
-        <p>Tela em desenvolvimento...</p>
-      </section>
-
-      <section id="relatorios-screen" class="screen-hidden">
-        <h2>Financeiro / Caixa</h2>
-        <p>Tela em desenvolvimento...</p>
-      </section>
-
-    </section> <!-- Fim do main-content -->
-
-    <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ -->
- <!-- BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ (Fora do main para nunca sumir ou travar) -->
-  <nav class="bottom-nav">
-    <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
-    <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
-    <button type="button" class="nav-bottom-item nav-vinicius" data-target="chamada-screen" onclick="navegarPara('chamada-screen')" title="Chamada">📋</button>
-    <button type="button" class="nav-bottom-item nav-ambos" data-target="configuracoes-screen" onclick="navegarPara('configuracoes-screen')" title="Configurações">⚙️</button>
-    <button type="button" class="nav-bottom-item nav-vinicius" data-target="tatico-screen" onclick="navegarPara('tatico-screen')" title="Campo Tático">⚽</button>
-    <button type="button" class="nav-bottom-item nav-alessandra" data-target="cantina-screen" onclick="navegarPara('cantina-screen')" title="Cantina">🍿</button>
-    <button type="button" class="nav-bottom-item nav-alessandra" data-target="financeiro-screen" onclick="navegarPara('financeiro-screen')" title="Mensalidades">💰</button>
-    <button type="button" class="nav-bottom-item nav-alessandra" data-target="relatorios-screen" onclick="navegarPara('relatorios-screen')" title="Financeiro / Caixa">📊</button>
-  </nav>
-
-  <!-- SCRIPTS JAVASCRIPT -->
   <script src="js/router.js"></script>
   <script type="module" src="js/data/mockData.js"></script>
   <script type="module" src="js/data/storage.js"></script>
   <script type="module" src="js/modules/auth.js"></script>
   <script type="module" src="js/app.js"></script>
-
 </body>
 </html>

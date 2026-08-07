@@ -430,3 +430,11 @@
     margin-top: 15px;
     cursor: pointer;
 }
+
+/* BLOCO: PADRONIZAÇÃO DE TEXTO EM MAIÚSCULO */
+/* Força todos os campos de texto do formulário a exibirem letras maiúsculas */
+#formAluno input[type="text"],
+#formAluno textarea,
+#busca-nome {
+  text-transform: uppercase;
+}
