@@ -103,22 +103,67 @@ function capturarDadosFormulario() {
     carteirinha: maiusculo("aluno-carteirinha")
   };
 }
-// 5. SALVAR OU EDITAR ALUNO COM VALIDAÇÃO COMPLETA DE TODOS OS CAMPOS
+// 5. SALVAR OU EDITAR ALUNO COM VALIDAÇÃO E FOCO NO CAMPO VAZIO
 export function salvarAluno(event) {
   if (event) event.preventDefault();
 
-  const a = capturarDadosFormulario();
+  // Mapeamento dos campos com o ID do campo, ID da aba correspondente e Nome do Campo
+  const camposObrigatorios = [
+    // Aba Técnico
+    { id: "aluno-nome", tab: "dados-tecnicos", nome: "Nome Completo" },
+    { id: "data-nasc", tab: "dados-tecnicos", nome: "Data de Nascimento" },
+    { id: "aluno-turma", tab: "dados-tecnicos", nome: "Turma" },
+    { id: "aluno-frequencia", tab: "dados-tecnicos", nome: "Frequência" },
+    { id: "aluno-horario", tab: "dados-tecnicos", nome: "Dia / Horário" },
+    { id: "aluno-posicao", tab: "dados-tecnicos", nome: "Posição" },
+    { id: "aluno-pe", tab: "dados-tecnicos", nome: "Pé Chutador" },
+    { id: "aluno-camiseta", tab: "dados-tecnicos", nome: "Camiseta" },
+    { id: "aluno-short", tab: "dados-tecnicos", nome: "Short" },
+    { id: "aluno-meiao", tab: "dados-tecnicos", nome: "Meião" },
+    
+    // Aba Família
+    { id: "aluno-matricula", tab: "dados-responsaveis", nome: "Data da Matrícula" },
+    { id: "aluno-cpf-crianca", tab: "dados-responsaveis", nome: "CPF da Criança" },
+    { id: "aluno-responsavel", tab: "dados-responsaveis", nome: "Nome do Responsável" },
+    { id: "aluno-cpf-resp", tab: "dados-responsaveis", nome: "CPF do Responsável" },
+    { id: "aluno-whatsapp", tab: "dados-responsaveis", nome: "WhatsApp" },
+    { id: "aluno-emergencia", tab: "dados-responsaveis", nome: "Número de Emergência" },
+    { id: "aluno-retirada", tab: "dados-responsaveis", nome: "Quem pode retirar" },
 
-  if (
-    !a.nome || !a.dataNascimento || !a.turma || !a.frequencia || 
-    !a.horario || !a.posicao || !a.pe || !a.camiseta || !a.short || !a.meiao ||
-    !a.dataMatricula || !a.cpfCrianca || !a.responsavel || !a.cpfResponsavel || 
-    !a.whatsapp || !a.emergencia || !a.retirada ||
-    !a.restricoesSaude || !a.alergias || !a.convenio || !a.carteirinha
-  ) {
-    alert("⚠️ ATENÇÃO: Todos os campos das 3 abas (Técnico, Família e Saúde) devem ser preenchidos!");
-    return;
+    // Aba Saúde
+    { id: "aluno-saude", tab: "dados-saude", nome: "Restrições de Saúde" },
+    { id: "aluno-alergias", tab: "dados-saude", nome: "Alergias" },
+    { id: "aluno-convenio", tab: "dados-saude", nome: "Convênio" },
+    { id: "aluno-carteirinha", tab: "dados-saude", nome: "Nº Carteirinha" }
+  ];
+
+  // Procura o PRIMEIRO campo que está vazio
+  for (const item of camposObrigatorios) {
+    const el = document.getElementById(item.id);
+    if (!el || !el.value.trim()) {
+      alert(`⚠️ Por favor, preencha o campo "${item.nome}"!`);
+
+      // 1. Alterna visualmente para a aba correta se ela não estiver ativa
+      const tabBtn = document.querySelector(`.tab-btn[data-tab="${item.tab}"]`);
+      if (tabBtn) tabBtn.click();
+
+      // 2. Coloca o cursor no campo vazio
+      if (el) {
+        el.focus();
+        
+        // Efeito de destaque rápido no campo faltante
+        const bordaOriginal = el.style.borderColor;
+        el.style.borderColor = "#ff5252";
+        setTimeout(() => {
+          el.style.borderColor = bordaOriginal;
+        }, 3000);
+      }
+      return; // Interrompe o salvamento aqui
+    }
   }
+
+  // Se passou por tudo sem estar vazio, lê os dados e salva
+  const a = capturarDadosFormulario();
 
   try {
     let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
