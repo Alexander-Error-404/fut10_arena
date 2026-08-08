@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FUT 10 Arena - Gestão Escolinha & Cantina</title>
   
-  <!-- Estilos Globais e do Sistema -->
+  <!-- =======================================================================
+       ESTILOS GLOBAIS E ESTRUTURAIS DO SISTEMA
+       ======================================================================= -->
   <link rel="stylesheet" href="assets/css/global.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
@@ -14,12 +16,18 @@
 </head>
 <body>
 
-  <!-- TELA 1: LOGIN DO SISTEMA -->
+  <!-- =======================================================================
+       TELA 1: AUTENTICAÇÃO E LOGIN DE USUÁRIOS
+       Bloco responsável por controlar o acesso restrito por perfil (Alessandra / Vinícius)
+       ======================================================================= -->
   <section id="login-screen" class="login-container screen-active">
     <div class="login-card">
-      <img src="assets/images/logo.png" alt="FUT 10 Arena" class="login-logo" />
+      <!-- Imagem da logo com tratamento de caminho para evitar chamadas quebradas -->
+      <img src="assets/images/logo.png" alt="FUT 10 Arena" class="login-logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%2313335c\'/><text x=\'50%\' y=\'55%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'50\'>⚽</text></svg>';" />
       <h1 class="login-title">FUT 10 Arena</h1>
       <p class="login-subtitle">Sistema de Gestão Escolinha & Cantina</p>
+      
+      <!-- Container dinâmico para exibição de erros de validação de login -->
       <div id="error-message" class="error-message"></div>
 
       <form id="form-login">
@@ -42,8 +50,13 @@
     </div>
   </section>
 
-  <!-- TELA 2: ÁREA PRINCIPAL DO SISTEMA -->
+  <!-- =======================================================================
+       TELA 2: ÁREA RESTRITA / APLICAÇÃO PRINCIPAL
+       Exibida apenas após a confirmação de login bem-sucedido
+       ======================================================================= -->
   <main id="app-screen" class="app-container screen-hidden">
+    
+    <!-- CABEÇALHO DA APLICAÇÃO: Exibe usuário ativo e botão de logout -->
     <header class="app-header">
       <div class="user-info">
         <span id="user-display-name" class="user-name">Usuário</span>
@@ -52,9 +65,16 @@
       <button id="btn-logout" class="btn-logout">Sair</button>
     </header>
 
+    <!-- ÁREA DE CONTEÚDO DINÂMICO (SPA - Single Page Application) -->
     <section id="main-content" class="content-area">
-      <!-- DASHBOARD -->
+      
+      <!-- ===================================================================
+           ABA/MÓDULO: DASHBOARD (INDICADORES DE DESEMPENHO - KPIs)
+           Visão geral do negócio (Alunos, Inadimplência, Estoque e Fiado)
+           =================================================================== -->
       <div id="dashboard-screen" class="dashboard-container">
+        
+        <!-- CARDS DE INDICADORES (KPIs) -->
         <div class="indicadores-container">
           <div class="card-indicador">
             <div class="ind-icon">👥</div>
@@ -88,6 +108,7 @@
 
         <h3>Painel de Controle</h3>
 
+        <!-- MENU DE NAVEGAÇÃO EM GRID (ATALHOS RÁPIDOS) -->
         <div class="menu-grid">
           <button type="button" class="menu-card menu-ambos" data-target="alunos" onclick="navegarPara('alunos-screen')">
             <div class="card-icon">👥</div>
@@ -96,6 +117,7 @@
               <p>Cadastro, categorias e dados dos pais</p>
             </div>
           </button>
+          
           <button type="button" class="menu-card menu-vinicius" data-target="chamada" onclick="navegarPara('chamada-screen')">
             <div class="card-icon">📋</div>
             <div class="card-info">
@@ -146,13 +168,17 @@
         </div>
       </div>
 
-      <!-- MÓDULO ALUNOS -->
+      <!-- ===================================================================
+           ABA/MÓDULO: GESTÃO DE ALUNOS
+           Listagem, filtragem, busca e acionamento do cadastro de alunos
+           =================================================================== -->
       <section id="alunos-screen" class="screen-hidden">
         <div class="module-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
           <h2>Gestão de Alunos</h2>
           <button id="btn-novo-aluno" class="btn-add" onclick="abrirModalAluno()">+</button>
         </div>
 
+        <!-- FILTROS DE PESQUISA -->
         <section class="filtros-container">
           <input type="text" id="busca-nome" placeholder="🔍 Buscar aluno pelo nome...">
           <div class="filtros-seletores">
@@ -175,10 +201,14 @@
           </div>
         </section>
 
+        <!-- Container onde os cards dos alunos são renderizados dinamicamente via JS -->
         <main class="alunos-lista" id="alunos-lista"></main>
       </section>
 
-      <!-- MÓDULO CONFIGURAÇÕES (INTEGRADO) -->
+      <!-- ===================================================================
+           ABA/MÓDULO: CONFIGURAÇÕES E REGRAS DE NEGÓCIO
+           Definição de tabelas de preços, descontos de irmãos e valores de uniformes
+           =================================================================== -->
       <section id="configuracoes-screen" class="screen-hidden">
         <div class="module-header" style="margin-bottom: 15px;">
           <h2>Regras de Negócio e Valores</h2>
@@ -250,7 +280,7 @@
             </div>
           </div>
 
-          <!-- SEÇÃO 3: UNIFORMES E COMPONENTES AVULSOS -->
+          <!-- SEÇÃO 3: UNIFORMES E PEÇAS AVULSAS -->
           <div class="config-card" style="background: #0b2545; border-radius: 10px; padding: 15px; margin-bottom: 15px; border: 1px solid #13335c;">
             <h3 style="color: #60a5fa; margin-top: 0;">👕 Uniformes e Acessórios Avulsos</h3>
             
@@ -294,7 +324,11 @@
           </button>
         </form>
       </section>
-      <!-- MODAL ALUNO -->
+
+      <!-- ===================================================================
+           MODAL: FORMULÁRIO DE CADASTRO E EDIÇÃO COMPLETA DE ALUNOS
+           Organizado em 3 Abas: Técnico, Família e Saúde
+           =================================================================== -->
       <div id="modal-aluno" class="modal-overlay">
         <div class="modal-content">
           <div class="modal-header">
@@ -302,6 +336,7 @@
             <button type="button" id="btn-fechar-modal" class="btn-fechar" onclick="fecharModalAluno()">&times;</button>
           </div>
 
+          <!-- NAVEGAÇÃO INTERNA DO MODAL -->
           <div class="tab-menu">
             <button type="button" class="tab-btn active" data-tab="dados-tecnicos">⚽ Técnico</button>
             <button type="button" class="tab-btn" data-tab="dados-responsaveis">👥 Família</button>
@@ -311,7 +346,7 @@
           <form id="formAluno">
             <input type="hidden" id="aluno-id">
 
-            <!-- ABA 1: TÉCNICO -->
+            <!-- ABA 1 DO MODAL: DADOS TÉCNICOS E FOTO -->
             <div id="dados-tecnicos" class="tab-content active">
               <div class="foto-upload-container">
                 <div class="avatar-preview" id="foto-preview">📸</div>
@@ -401,7 +436,7 @@
               </div>
             </div>
 
-            <!-- ABA 2: FAMÍLIA -->
+            <!-- ABA 2 DO MODAL: FAMÍLIA E CONTATOS DE EMERGÊNCIA -->
             <div id="dados-responsaveis" class="tab-content">
               <div class="form-row">
                 <div class="form-group"><label>Data da Matrícula:</label><input type="date" id="aluno-matricula"></div>
@@ -417,7 +452,7 @@
               <div class="checkbox-group"><input type="checkbox" id="tem-irmao"><label for="tem-irmao">Tem irmão matriculado?</label></div>
             </div>
 
-            <!-- ABA 3: SAÚDE -->
+            <!-- ABA 3 DO MODAL: SAÚDE, ATESTADOS E AUTORIZAÇÕES -->
             <div id="dados-saude" class="tab-content">
               <div class="checkbox-group safety-check"><input type="checkbox" id="atestado-dia"><label for="atestado-dia">🩺 Atestado Médico em Dia?</label></div>
               <div class="checkbox-group safety-check"><input type="checkbox" id="uso-imagem"><label for="uso-imagem">📸 Autorização de Uso de Imagem?</label></div>
@@ -434,11 +469,14 @@
         </div>
       </div>
 
+      <!-- MÓDULOS SECUNDÁRIOS / EM DESENVOLVIMENTO -->
       <section id="chamada-screen" class="screen-hidden"><h2>Chamada do Campo</h2><p>Tela em desenvolvimento...</p></section>
       <section id="tatico-screen" class="screen-hidden"><h2>Prancheta Tática</h2><p>Tela em desenvolvimento...</p></section>
       <section id="cantina-screen" class="screen-hidden"><h2>Barzinho / Cantina</h2><p>Tela em desenvolvimento...</p></section>
       
-      <!-- MÓDULO MENSALIDADES -->
+      <!-- ===================================================================
+           ABA/MÓDULO: GESTÃO DE MENSALIDADES E PAGAMENTOS
+           =================================================================== -->
       <section id="financeiro-screen" class="screen-hidden">
         <div class="module-header" style="margin-bottom: 15px;">
           <h2>Gestão de Mensalidades</h2>
@@ -464,7 +502,9 @@
       <section id="relatorios-screen" class="screen-hidden"><h2>Financeiro / Caixa</h2><p>Tela em desenvolvimento...</p></section>
     </section>
 
-    <!-- MODAL: REGISTRAR PAGAMENTO DE MENSALIDADE -->
+    <!-- ===================================================================
+         MODAL: REGISTRAR E CONFIRMAR PAGAMENTO DE MENSALIDADE
+         =================================================================== -->
     <div id="modal-pagamento" class="modal-overlay">
       <div class="modal-content" style="max-width: 450px;">
         <div class="modal-header">
@@ -472,11 +512,12 @@
           <button type="button" id="fechar-modal-pagamento" class="btn-fechar">&times;</button>
         </div>
         
-        <div class="payment-info" style="background: #05101e; padding: 12px; border-radius: 8px; margin: 12px 0;">
-          <p style="margin-bottom: 4px;"><strong>Aluno:</strong> <span id="pay-aluno-nome">-</span></p>
-          <p style="margin-bottom: 8px;"><strong>Mês:</strong> <span id="pay-mes-nome">-</span></p>
-          <div id="pay-regra-aplicada" class="badge-info" style="background: #1e3a8a; color: #93c5fd; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem;"></div>
-        </div>
+<!-- DEPOIS (CORRIGIDO) -->
+<div class="payment-info" style="background: #071f4a; padding: 12px; border-radius: 8px; margin: 12px 0; border: 1px solid #13335c;">
+  <p style="margin-bottom: 6px; color: #93c5fd;"><strong>Aluno:</strong> <span id="pay-aluno-nome" style="color: #ffffff; font-weight: bold; font-size: 1.05rem;">-</span></p>
+  <p style="margin-bottom: 8px; color: #93c5fd;"><strong>Mês:</strong> <span id="pay-mes-nome" style="color: #ffffff; font-weight: bold;">-</span></p>
+  <div id="pay-regra-aplicada" class="badge-info" style="background: #1e3a8a; color: #38bdf8; padding: 6px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 500;"></div>
+</div>
 
         <form id="form-pagamento">
           <input type="hidden" id="pay-aluno-id">
@@ -490,7 +531,7 @@
 
           <div class="form-group" style="margin-top: 10px;">
             <label for="pay-valor-real">Valor Pago (R$)</label>
-            <input type="number" id="pay-valor-real" step="0.01" min="0" required placeholder="0.00">
+            <input type="text" id="pay-valor-real" step="0.01" min="0" required placeholder="0.00">
           </div>
 
           <div class="form-group" style="margin-top: 10px;">
@@ -515,6 +556,10 @@
       </div>
     </div>
 
+    <!-- ===================================================================
+         BARRA DE NAVEGAÇÃO INFERIOR (BOTTOM NAVIGATION)
+         Alterna entre as telas principais com base nas permissões de usuário
+         =================================================================== -->
     <nav class="bottom-nav">
       <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>
       <button type="button" class="nav-bottom-item nav-ambos" data-target="alunos-screen" onclick="navegarPara('alunos-screen')" title="Alunos">👥</button>
@@ -527,6 +572,7 @@
     </nav>
   </main>
 
+  <!-- CARREGAMENTO DOS SCRIPTS JS (LÓGICA E MÓDULOS) -->
   <script src="js/router.js"></script>
   <script type="module" src="js/data/mockData.js"></script>
   <script type="module" src="js/data/storage.js"></script>

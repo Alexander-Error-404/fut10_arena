@@ -2,12 +2,16 @@ import { getAlunos, getMensalidades, salvarMensalidade, getConfiguracoes } from 
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
+// ==========================================================================
+// INICIALIZAÇÃO DOS EVENTOS E MÁSCARAS
+// ==========================================================================
 export function initMensalidades() {
   const selectAno = document.getElementById('filtro-mensalidade-ano');
   const selectStatus = document.getElementById('filtro-mensalidade-status');
   const inputBusca = document.getElementById('busca-mensalidade-aluno');
   const btnFecharModal = document.getElementById('fechar-modal-pagamento');
   const formPagamento = document.getElementById('form-pagamento');
+  const campoValorPago = document.getElementById('pay-valor-real');
 
   if (selectAno) selectAno.addEventListener('change', renderizarMensalidades);
   if (selectStatus) selectStatus.addEventListener('change', renderizarMensalidades);
@@ -15,9 +19,17 @@ export function initMensalidades() {
   if (btnFecharModal) btnFecharModal.addEventListener('click', fecharModalPagamento);
   if (formPagamento) formPagamento.addEventListener('submit', processarPagamento);
 
+  // Aplica a máscara de moeda no campo de valor pago
+  if (campoValorPago) {
+    aplicarMascaraMoeda(campoValorPago);
+  }
+
   renderizarMensalidades();
 }
 
+// ==========================================================================
+// RENDERIZAÇÃO DA LISTA E CARDS DOS ALUNOS
+// ==========================================================================
 export function renderizarMensalidades() {
   const container = document.getElementById('lista-alunos-mensalidades');
   if (!container) return;
@@ -89,7 +101,9 @@ export function renderizarMensalidades() {
   }).join('');
 }
 
-// Vincula explicitamente no window para funcionar via HTML inline
+// ==========================================================================
+// ABERTURA E FECHAMENTO DO MODAL DE PAGAMENTO
+// ==========================================================================
 window.abrirPagamento = function(alunoId, mesIndex, ano) {
   const alunos = getAlunos();
   const aluno = alunos.find(a => String(a.id) === String(alunoId));
@@ -102,8 +116,21 @@ window.abrirPagamento = function(alunoId, mesIndex, ano) {
   document.getElementById('pay-mes-index').value = mesIndex;
   document.getElementById('pay-ano-ref').value = ano;
   
-  document.getElementById('pay-aluno-nome').textContent = aluno.nome;
-  document.getElementById('pay-mes-nome').textContent = `${MESES[mesIndex]}/${ano}`;
+  // Garante a exibição do nome em branco e legível
+  const elNome = document.getElementById('pay-aluno-nome');
+  const elMes = document.getElementById('pay-mes-nome');
+  
+  if (elNome) {
+    elNome.textContent = aluno.nome;
+    elNome.style.color = "#ffffff";
+    elNome.style.fontWeight = "bold";
+  }
+  if (elMes) {
+    elMes.textContent = `${MESES[mesIndex]}/${ano}`;
+    elMes.style.color = "#ffffff";
+    elMes.style.fontWeight = "bold";
+  }
+
   document.getElementById('pay-data-pagamento').value = dataHojeStr;
 
   const modal = document.getElementById('modal-pagamento');
@@ -115,12 +142,19 @@ export function fecharModalPagamento() {
   if (modal) modal.classList.remove('active');
 }
 
+// ==========================================================================
+// PROCESSAMENTO E SALVAMENTO DO PAGAMENTO
+// ==========================================================================
 function processarPagamento(e) {
   e.preventDefault();
   const alunoId = document.getElementById('pay-aluno-id').value;
   const mesIndex = document.getElementById('pay-mes-index').value;
   const ano = document.getElementById('pay-ano-ref').value;
-  const valorPago = parseFloat(document.getElementById('pay-valor-real').value);
+  
+  // Converte a string "R$ 150,00" de volta para número float (150.00)
+  const valorInput = document.getElementById('pay-valor-real').value;
+  const valorPago = parseFloat(valorInput.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+
   const dataPagamento = document.getElementById('pay-data-pagamento').value;
   const formaPagamento = document.getElementById('pay-forma-pagamento').value;
 
@@ -134,4 +168,21 @@ function processarPagamento(e) {
 
   fecharModalPagamento();
   renderizarMensalidades();
+}
+
+// ==========================================================================
+// FUNÇÃO AUXILIAR: MÁSCARA DE MOEDA (R$)
+// ==========================================================================
+export function aplicarMascaraMoeda(input) {
+  if (!input) return;
+  
+  input.addEventListener("input", (e) => {
+    let value = e.target.value.replace(/\D/g, ""); // Remove o que não é dígito
+    if (!value) {
+      e.target.value = "";
+      return;
+    }
+    value = (parseInt(value, 10) / 100).toFixed(2);
+    e.target.value = "R$ " + value.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  });
 }
