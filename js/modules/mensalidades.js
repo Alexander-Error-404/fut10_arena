@@ -26,7 +26,7 @@ export function renderizarMensalidades() {
   const statusFiltro = document.getElementById('filtro-mensalidade-status')?.value || 'todos';
   const termoBusca = document.getElementById('busca-mensalidade-aluno')?.value.toLowerCase().trim() || '';
 
-  const alunos = getAlunos().filter(a => a.status !== 'INATIVO');
+  const alunos = getAlunos();
   const todasMensalidades = getMensalidades();
 
   const alunosFiltrados = alunos.filter(aluno => {

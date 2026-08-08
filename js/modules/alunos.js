@@ -3,6 +3,7 @@
    ========================================================================== */
 
 import { renderizarDashboard } from "./dashboard.js";
+import { getAlunos, salvarAlunos } from "../data/storage.js";
 
 // 1. CONTROLE DE ABERTURA E FECHAMENTO DO MODAL
 export function abrirModalAluno() {
@@ -103,13 +104,11 @@ function capturarDadosFormulario() {
     carteirinha: maiusculo("aluno-carteirinha")
   };
 }
-// 5. SALVAR OU EDITAR ALUNO COM VALIDAÇÃO E FOCO NO CAMPO VAZIO
+// 5. SALVAR OU EDITAR ALUNO COM VALIDAÇÃO E INTEGRADO AO STORAGE OFICIAL
 export function salvarAluno(event) {
   if (event) event.preventDefault();
 
-  // Mapeamento dos campos com o ID do campo, ID da aba correspondente e Nome do Campo
   const camposObrigatorios = [
-    // Aba Técnico
     { id: "aluno-nome", tab: "dados-tecnicos", nome: "Nome Completo" },
     { id: "data-nasc", tab: "dados-tecnicos", nome: "Data de Nascimento" },
     { id: "aluno-turma", tab: "dados-tecnicos", nome: "Turma" },
@@ -120,8 +119,6 @@ export function salvarAluno(event) {
     { id: "aluno-camiseta", tab: "dados-tecnicos", nome: "Camiseta" },
     { id: "aluno-short", tab: "dados-tecnicos", nome: "Short" },
     { id: "aluno-meiao", tab: "dados-tecnicos", nome: "Meião" },
-    
-    // Aba Família
     { id: "aluno-matricula", tab: "dados-responsaveis", nome: "Data da Matrícula" },
     { id: "aluno-cpf-crianca", tab: "dados-responsaveis", nome: "CPF da Criança" },
     { id: "aluno-responsavel", tab: "dados-responsaveis", nome: "Nome do Responsável" },
@@ -129,44 +126,37 @@ export function salvarAluno(event) {
     { id: "aluno-whatsapp", tab: "dados-responsaveis", nome: "WhatsApp" },
     { id: "aluno-emergencia", tab: "dados-responsaveis", nome: "Número de Emergência" },
     { id: "aluno-retirada", tab: "dados-responsaveis", nome: "Quem pode retirar" },
-
-    // Aba Saúde
     { id: "aluno-saude", tab: "dados-saude", nome: "Restrições de Saúde" },
     { id: "aluno-alergias", tab: "dados-saude", nome: "Alergias" },
     { id: "aluno-convenio", tab: "dados-saude", nome: "Convênio" },
     { id: "aluno-carteirinha", tab: "dados-saude", nome: "Nº Carteirinha" }
   ];
 
-  // Procura o PRIMEIRO campo que está vazio
   for (const item of camposObrigatorios) {
     const el = document.getElementById(item.id);
     if (!el || !el.value.trim()) {
       alert(`⚠️ Por favor, preencha o campo "${item.nome}"!`);
 
-      // 1. Alterna visualmente para a aba correta se ela não estiver ativa
       const tabBtn = document.querySelector(`.tab-btn[data-tab="${item.tab}"]`);
       if (tabBtn) tabBtn.click();
 
-      // 2. Coloca o cursor no campo vazio
       if (el) {
         el.focus();
-        
-        // Efeito de destaque rápido no campo faltante
         const bordaOriginal = el.style.borderColor;
         el.style.borderColor = "#ff5252";
         setTimeout(() => {
           el.style.borderColor = bordaOriginal;
         }, 3000);
       }
-      return; // Interrompe o salvamento aqui
+      return;
     }
   }
 
-  // Se passou por tudo sem estar vazio, lê os dados e salva
   const a = capturarDadosFormulario();
 
   try {
-    let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+    // Usa a função oficial do storage.js
+    let listaAlunos = getAlunos();
     const indexExistente = listaAlunos.findIndex((item) => item.id === a.id);
 
     if (indexExistente >= 0) {
@@ -177,7 +167,8 @@ export function salvarAluno(event) {
       alert("✅ Novo aluno cadastrado com sucesso!");
     }
 
-    localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
+    // Salva usando a função padronizada do sistema
+    salvarAlunos(listaAlunos);
   } catch (erro) {
     alert("Erro ao salvar os dados no navegador.");
     return;
@@ -189,7 +180,7 @@ export function salvarAluno(event) {
 
 // 6. CARREGAR ALUNO NO MODAL PARA EDIÇÃO
 export function preencherModalParaEdicao(alunoId) {
-  const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+  const listaAlunos = getAlunos();
   const aluno = listaAlunos.find((item) => item.id === alunoId);
   if (!aluno) return;
 
@@ -230,16 +221,15 @@ export function preencherModalParaEdicao(alunoId) {
 
   abrirModalAluno();
 }
-
 // 7. EXCLUIR ALUNO COM CONFIRMAÇÃO
 export function excluirAluno(alunoId, nomeAluno) {
   const confirmou = confirm(`⚠️ Tem certeza que deseja EXCLUIR o cadastro de "${nomeAluno}"?\nEsta ação não poderá ser desfeita.`);
   if (!confirmou) return;
 
   try {
-    let listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+    let listaAlunos = getAlunos();
     listaAlunos = listaAlunos.filter((item) => item.id !== alunoId);
-    localStorage.setItem("fut10_alunos", JSON.stringify(listaAlunos));
+    salvarAlunos(listaAlunos);
     renderizarListaAlunos();
     alert("🗑️ Aluno removido com sucesso!");
   } catch (erro) {
@@ -258,30 +248,27 @@ function atualizarFiltroTurmas(listaAlunos) {
   selectTurma.innerHTML = `<option value="">Todas as Turmas</option>` +
     turmasUnicas.map((t) => `<option value="${t}" ${t === turmaAtual ? "selected" : ""}>${t}</option>`).join("");
 }
+
 // 9. RENDERIZAR CARDS DOS ALUNOS COM FILTROS CORRIGIDOS E LINK DO WHATSAPP
 export function renderizarListaAlunos() {
   const container = document.getElementById("alunos-lista");
   if (!container) return;
 
-  const listaAlunos = JSON.parse(localStorage.getItem("fut10_alunos") || "[]");
+  const listaAlunos = getAlunos();
 
   atualizarFiltroTurmas(listaAlunos);
 
-  // Captura os valores de cada filtro ajustando para os IDs reais do index.html
   const termoBusca = (document.getElementById("busca-nome")?.value || "").toLowerCase().trim();
   const turmaSelecionada = document.getElementById("filtro-turma")?.value || "";
   const statusSelecionado = (document.getElementById("filtro-status-busca")?.value || "").toUpperCase().trim();
   const habilidadeSelecionada = document.getElementById("filtro-habilidade")?.value || "";
 
-  // Filtra os alunos combinando todas as condições
   const alunosFiltrados = listaAlunos.filter((aluno) => {
     const atendeNome = (aluno.nome || "").toLowerCase().includes(termoBusca);
     const atendeTurma = !turmaSelecionada || aluno.turma === turmaSelecionada;
     
-    // Filtro por Status (ATIVO / INATIVO)
     const atendeStatus = !statusSelecionado || (aluno.status || "ATIVO").toUpperCase() === statusSelecionado;
     
-    // Filtro por Habilidade: Conta quantas estrelas '⭐' existem no cadastro do aluno
     const qtdEstrelasAluno = (aluno.habilidade || "").split("⭐").length - 1;
     const atendeHabilidade = !habilidadeSelecionada || 
       aluno.habilidade === habilidadeSelecionada || 
@@ -352,7 +339,6 @@ export function renderizarListaAlunos() {
     .join("");
     renderizarDashboard();
 }
-
 // 10. MÁSCARAS DE ENTRADA E ESCUTADORES DE EVENTOS
 export function inicializarEventosFiltros() {
   const buscaNome = document.getElementById("busca-nome");
@@ -361,7 +347,6 @@ export function inicializarEventosFiltros() {
   const filtroTurma = document.getElementById("filtro-turma");
   if (filtroTurma) filtroTurma.addEventListener("change", renderizarListaAlunos);
 
-  // Escutador ajustado com o ID real do HTML
   const filtroStatus = document.getElementById("filtro-status-busca");
   if (filtroStatus) filtroStatus.addEventListener("change", renderizarListaAlunos);
 
