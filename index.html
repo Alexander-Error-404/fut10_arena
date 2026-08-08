@@ -96,7 +96,6 @@
               <p>Cadastro, categorias e dados dos pais</p>
             </div>
           </button>
-
           <button type="button" class="menu-card menu-vinicius" data-target="chamada" onclick="navegarPara('chamada-screen')">
             <div class="card-icon">📋</div>
             <div class="card-info">
@@ -179,6 +178,122 @@
         <main class="alunos-lista" id="alunos-lista"></main>
       </section>
 
+      <!-- MÓDULO CONFIGURAÇÕES (INTEGRADO) -->
+      <section id="configuracoes-screen" class="screen-hidden">
+        <div class="module-header" style="margin-bottom: 15px;">
+          <h2>Regras de Negócio e Valores</h2>
+          <p style="color: #94a3b8; font-size: 0.9rem;">Gerencie os valores de mensalidades por data, preços de uniformes e políticas de desconto.</p>
+        </div>
+
+        <form id="form-configuracoes">
+          <!-- SEÇÃO 1: MENSALIDADES POR PERÍODO -->
+          <div class="config-card" style="background: #0b2545; border-radius: 10px; padding: 15px; margin-bottom: 15px; border: 1px solid #13335c;">
+            <h3 style="color: #60a5fa; margin-top: 0;">📅 Mensalidades por Período e Frequência Semanal</h3>
+            
+            <div class="period-block" style="background: #071f4a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <h4 style="color: #38bdf8; margin: 0 0 10px 0;">💰 Período 1: Até o dia 10 do mês</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>1x na Semana (Até dia 10)</label>
+                  <input type="text" id="mensalidade-1x-p1" class="campo-moeda" required>
+                </div>
+                <div class="form-group">
+                  <label>2x na Semana (Até dia 10)</label>
+                  <input type="text" id="mensalidade-2x-p1" class="campo-moeda" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="period-block" style="background: #071f4a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <h4 style="color: #38bdf8; margin: 0 0 10px 0;">💰 Período 2: Do dia 11 ao dia 20</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>1x na Semana (Dia 11 a 20)</label>
+                  <input type="text" id="mensalidade-1x-p2" class="campo-moeda" required>
+                </div>
+                <div class="form-group">
+                  <label>2x na Semana (Dia 11 a 20)</label>
+                  <input type="text" id="mensalidade-2x-p2" class="campo-moeda" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="period-block" style="background: #071f4a; padding: 12px; border-radius: 8px;">
+              <h4 style="color: #38bdf8; margin: 0 0 10px 0;">💰 Período 3: Do dia 21 ao dia 30/31</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>1x na Semana (Dia 21 a 30)</label>
+                  <input type="text" id="mensalidade-1x-p3" class="campo-moeda" required>
+                </div>
+                <div class="form-group">
+                  <label>2x na Semana (Dia 21 a 30)</label>
+                  <input type="text" id="mensalidade-2x-p3" class="campo-moeda" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: DESCONTO PARA IRMÃOS -->
+          <div class="config-card" style="background: #0b2545; border-radius: 10px; padding: 15px; margin-bottom: 15px; border: 1px solid #13335c;">
+            <h3 style="color: #60a5fa; margin-top: 0;">👥 Política de Desconto para Irmãos</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Desconto Irmão - 1x na Semana</label>
+                <input type="text" id="desconto-irmao-1x" class="campo-moeda" required>
+                <small style="color: #94a3b8;">Subtraído do valor básico</small>
+              </div>
+              <div class="form-group">
+                <label>Desconto Irmão - 2x na Semana</label>
+                <input type="text" id="desconto-irmao-2x" class="campo-moeda" required>
+                <small style="color: #94a3b8;">Subtraído do valor básico</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: UNIFORMES E COMPONENTES AVULSOS -->
+          <div class="config-card" style="background: #0b2545; border-radius: 10px; padding: 15px; margin-bottom: 15px; border: 1px solid #13335c;">
+            <h3 style="color: #60a5fa; margin-top: 0;">👕 Uniformes e Acessórios Avulsos</h3>
+            
+            <h4 style="color: #38bdf8; margin: 10px 0;">Kit de Uniforme Completo</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Uniforme Completo - À Vista</label>
+                <input type="text" id="uniforme-vista" class="campo-moeda" required>
+              </div>
+              <div class="form-group">
+                <label>Uniforme Completo - Parcelado (Crédito)</label>
+                <input type="text" id="uniforme-prazo" class="campo-moeda" required>
+              </div>
+            </div>
+
+            <h4 style="color: #38bdf8; margin: 15px 0 10px 0;">Peças Avulsas (Apenas à Vista)</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Meião Tipo "A"</label>
+                <input type="text" id="meiao-a" class="campo-moeda" required>
+              </div>
+              <div class="form-group">
+                <label>Meião Tipo "B"</label>
+                <input type="text" id="meiao-b" class="campo-moeda" required>
+              </div>
+            </div>
+            <div class="form-row" style="margin-top: 10px;">
+              <div class="form-group">
+                <label>Shorts Tipo "A"</label>
+                <input type="text" id="shorts-a" class="campo-moeda" required>
+              </div>
+              <div class="form-group">
+                <label>Camiseta FUT10</label>
+                <input type="text" id="camiseta-fut10" class="campo-moeda" required>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" style="background: #2563eb; color: #fff; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">
+            💾 Salvar Configurações
+          </button>
+        </form>
+      </section>
       <!-- MODAL ALUNO -->
       <div id="modal-aluno" class="modal-overlay">
         <div class="modal-content">
@@ -320,12 +435,85 @@
       </div>
 
       <section id="chamada-screen" class="screen-hidden"><h2>Chamada do Campo</h2><p>Tela em desenvolvimento...</p></section>
-      <section id="configuracoes-screen" class="screen-hidden"><h2>Configurações do Sistema</h2><p>Tela em desenvolvimento...</p></section>
       <section id="tatico-screen" class="screen-hidden"><h2>Prancheta Tática</h2><p>Tela em desenvolvimento...</p></section>
       <section id="cantina-screen" class="screen-hidden"><h2>Barzinho / Cantina</h2><p>Tela em desenvolvimento...</p></section>
-      <section id="financeiro-screen" class="screen-hidden"><h2>Gestão de Mensalidades</h2><p>Tela em desenvolvimento...</p></section>
+      
+      <!-- MÓDULO MENSALIDADES -->
+      <section id="financeiro-screen" class="screen-hidden">
+        <div class="module-header" style="margin-bottom: 15px;">
+          <h2>Gestão de Mensalidades</h2>
+        </div>
+
+        <section class="filtros-container" style="margin-bottom: 15px;">
+          <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+            <select id="filtro-mensalidade-ano" style="flex: 1; padding: 10px; background: #0b2545; color: #fff; border: 1px solid #13335c; border-radius: 8px;">
+              <option value="2026" selected>Ano 2026</option>
+              <option value="2025">Ano 2025</option>
+            </select>
+            <select id="filtro-mensalidade-status" style="flex: 1; padding: 10px; background: #0b2545; color: #fff; border: 1px solid #13335c; border-radius: 8px;">
+              <option value="todos">Todos os Alunos</option>
+              <option value="inadimplentes">Apenas Inadimplentes</option>
+            </select>
+          </div>
+          <input type="text" id="busca-mensalidade-aluno" placeholder="🔍 Buscar aluno por nome..." style="width: 100%; padding: 10px; background: #0b2545; color: #fff; border: 1px solid #13335c; border-radius: 8px;">
+        </section>
+
+        <div id="lista-alunos-mensalidades" class="grid-alunos"></div>
+      </section>
+
       <section id="relatorios-screen" class="screen-hidden"><h2>Financeiro / Caixa</h2><p>Tela em desenvolvimento...</p></section>
     </section>
+
+    <!-- MODAL: REGISTRAR PAGAMENTO DE MENSALIDADE -->
+    <div id="modal-pagamento" class="modal-overlay">
+      <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+          <h3>Registrar Pagamento</h3>
+          <button type="button" id="fechar-modal-pagamento" class="btn-fechar">&times;</button>
+        </div>
+        
+        <div class="payment-info" style="background: #05101e; padding: 12px; border-radius: 8px; margin: 12px 0;">
+          <p style="margin-bottom: 4px;"><strong>Aluno:</strong> <span id="pay-aluno-nome">-</span></p>
+          <p style="margin-bottom: 8px;"><strong>Mês:</strong> <span id="pay-mes-nome">-</span></p>
+          <div id="pay-regra-aplicada" class="badge-info" style="background: #1e3a8a; color: #93c5fd; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem;"></div>
+        </div>
+
+        <form id="form-pagamento">
+          <input type="hidden" id="pay-aluno-id">
+          <input type="hidden" id="pay-mes-index">
+          <input type="hidden" id="pay-ano-ref">
+
+          <div class="form-group">
+            <label>Valor Sugerido pelo Sistema</label>
+            <div id="pay-valor-sugerido" style="font-size: 1.5rem; font-weight: bold; color: #93c5fd; background: #1e3a8a; padding: 10px; border-radius: 8px; text-align: center; margin-top: 4px;">R$ 0,00</div>
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label for="pay-valor-real">Valor Pago (R$)</label>
+            <input type="number" id="pay-valor-real" step="0.01" min="0" required placeholder="0.00">
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label for="pay-data-pagamento">Data do Pagamento</label>
+            <input type="date" id="pay-data-pagamento" required>
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label for="pay-forma-pagamento">Forma de Pagamento</label>
+            <select id="pay-forma-pagamento" required>
+              <option value="Pix">📱 PIX</option>
+              <option value="Dinheiro">💵 Dinheiro</option>
+              <option value="Cartão de Débito">💳 Cartão de Débito</option>
+              <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
+            </select>
+          </div>
+
+          <button type="submit" style="margin-top: 15px; background: #10b981; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer;">
+            ✓ Confirmar Recebimento
+          </button>
+        </form>
+      </div>
+    </div>
 
     <nav class="bottom-nav">
       <button type="button" class="nav-bottom-item active" data-target="dashboard-screen" onclick="navegarPara('dashboard-screen')" title="Início">🏠</button>

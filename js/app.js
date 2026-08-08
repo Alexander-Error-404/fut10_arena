@@ -1,5 +1,5 @@
 /* ==========================================================================
-   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js) - PARTE 1
+   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js)
    ========================================================================== */
 
 import { aplicarPermissoesPerfil } from "./modules/auth.js";
@@ -13,13 +13,11 @@ import {
   calcularIdadeAutomatica
 } from "./modules/alunos.js";
 
-// BLOCO DE EXPOSIÇÃO GLOBAL
-// Garante acesso direto pelos eventos onclick do HTML
-window.abrirModalAluno = abrirModalAluno;
-window.fecharModalAluno = fecharModalAluno;
+import { initMensalidades, renderizarMensalidades, fecharModalPagamento } from "./modules/mensalidades.js";
+import { initConfiguracoes } from "./modules/configuracoes.js";
 
-// BLOCO 1: TRANSIÇÃO E ENTRADA NO SISTEMA
-function abrirSistema(usuario) {
+// FUNÇÃO DE ABERTURA DO SISTEMA (Tornada global)
+window.abrirSistema = function(usuario) {
   const loginScreen = document.getElementById("login-screen");
   const appScreen = document.getElementById("app-screen");
   const userDisplayName = document.getElementById("user-display-name");
@@ -45,22 +43,37 @@ function abrirSistema(usuario) {
     appScreen.style.setProperty("display", "block", "important");
   }
 
-  try { aplicarPermissoesPerfil(usuario); } catch (e) {}
-  try { renderizarListaAlunos(); } catch (e) {}
+  // Inicializa a lógica de cada módulo sem interromper o fluxo se houver erro
+  try { aplicarPermissoesPerfil(usuario); } catch (e) { console.warn("Erro Auth:", e); }
+  try { renderizarListaAlunos(); } catch (e) { console.warn("Erro Alunos:", e); }
+  try { initMensalidades(); } catch (e) { console.warn("Erro Mensalidades:", e); }
+  try { initConfiguracoes(); } catch (e) { console.warn("Erro Config:", e); }
 
   if (inputSenha) inputSenha.value = "";
-}
+};
 
-// BLOCO 2: LOGOUT
+// EXPOSIÇÃO GLOBAL DE OUTRAS FUNÇÕES
+window.abrirModalAluno = abrirModalAluno;
+window.fecharModalAluno = fecharModalAluno;
+window.fecharModalPagamento = fecharModalPagamento;
+
+// HOOK DE NAVEGAÇÃO
+window.aoMudarDeTela = function(screenId) {
+  if (screenId === "financeiro-screen") {
+    try { renderizarMensalidades(); } catch (e) {}
+  } else if (screenId === "configuracoes-screen") {
+    try { initConfiguracoes(); } catch (e) {}
+  } else if (screenId === "alunos-screen") {
+    try { renderizarListaAlunos(); } catch (e) {}
+  }
+};
+
+// AUXILIARES DE LOGIN E INTERFACE
 function realizarLogout() {
   localStorage.removeItem("usuarioLogado");
   window.location.reload();
 }
-/* ==========================================================================
-   FUT 10 ARENA - INICIALIZAÇÃO DA APLICAÇÃO (js/app.js) - PARTE 2
-   ========================================================================== */
 
-// BLOCO 3: MENSAGENS DE FEEDBACK VISUAL
 function exibirErro(mensagem) {
   const errorMessage = document.getElementById("error-message");
   if (errorMessage) {
@@ -78,11 +91,12 @@ function esconderErro() {
 }
 
 function validarCredenciais(usuario, senha) {
+  if (!usuario) return false;
   if (senha === "1234" || senha === "123" || senha === "admin") return true;
-  return Boolean(usuario && senha.length >= 3);
+  return senha.length >= 3;
 }
 
-// BLOCO 4: REGISTRO DE EVENTOS DOM
+// INICIALIZAÇÃO EVENTOS DOM
 document.addEventListener("DOMContentLoaded", () => {
   const formLogin = document.getElementById("form-login");
   const selectUsuario = document.getElementById("select-usuario");
@@ -91,9 +105,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputDataNasc = document.getElementById("data-nasc");
   const inputIdade = document.getElementById("idade-aluno");
 
-  try { renderizarListaAlunos(); } catch (e) {}
   try { inicializarEventosFiltros(); } catch (e) {}
 
+  // Evento das abas da ficha do aluno
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const tabTarget = e.currentTarget.getAttribute("data-tab");
@@ -115,15 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const usuarioSalvo = localStorage.getItem("usuarioLogado");
-  if (usuarioSalvo) {
-    abrirSistema(usuarioSalvo);
-  }
-
+  // SUBMIT DO FORMULÁRIO DE LOGIN
   if (formLogin) {
     formLogin.addEventListener("submit", (event) => {
       event.preventDefault();
-      event.stopPropagation();
 
       const usuario = selectUsuario ? selectUsuario.value : "";
       const senha = inputSenha ? inputSenha.value.trim() : "";
@@ -132,11 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (validarCredenciais(usuario, senha)) {
         localStorage.setItem("usuarioLogado", usuario);
-        abrirSistema(usuario);
+        window.abrirSistema(usuario);
       } else {
-        exibirErro("Usuário ou senha incorretos. Tente novamente!");
+        exibirErro("Selecione um usuário e digite a senha correta (ex: 1234)!");
       }
-      return false;
     });
   }
 
@@ -145,5 +153,11 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       realizarLogout();
     });
+  }
+
+  // AUTO-LOGIN (Apenas no final, após registrar todos os eventos)
+  const usuarioSalvo = localStorage.getItem("usuarioLogado");
+  if (usuarioSalvo) {
+    window.abrirSistema(usuarioSalvo);
   }
 });
