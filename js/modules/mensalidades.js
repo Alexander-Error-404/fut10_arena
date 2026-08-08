@@ -12,12 +12,14 @@ export function initMensalidades() {
   const btnFecharModal = document.getElementById('fechar-modal-pagamento');
   const formPagamento = document.getElementById('form-pagamento');
   const campoValorPago = document.getElementById('pay-valor-real');
+  const btnEstornar = document.getElementById('btn-estornar-pagamento');
 
   if (selectAno) selectAno.addEventListener('change', renderizarMensalidades);
   if (selectStatus) selectStatus.addEventListener('change', renderizarMensalidades);
   if (inputBusca) inputBusca.addEventListener('input', renderizarMensalidades);
   if (btnFecharModal) btnFecharModal.addEventListener('click', fecharModalPagamento);
   if (formPagamento) formPagamento.addEventListener('submit', processarPagamento);
+  if (btnEstornar) btnEstornar.addEventListener('click', cancelarPagamento);
 
   // Aplica a máscara de moeda no campo de valor pago
   if (campoValorPago) {
@@ -109,6 +111,16 @@ window.abrirPagamento = function(alunoId, mesIndex, ano) {
   const aluno = alunos.find(a => String(a.id) === String(alunoId));
   if (!aluno) return;
 
+  // Busca o valor padrão das configurações
+  const config = getConfiguracoes() || {};
+  const valorPadrao = parseFloat(config.valorMensalidade || 0);
+
+  // Formata para R$ (ex: R$ 150,00)
+  const valorFormatado = valorPadrao.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+
   const hoje = new Date();
   const dataHojeStr = hoje.toISOString().split('T')[0];
 
@@ -116,7 +128,7 @@ window.abrirPagamento = function(alunoId, mesIndex, ano) {
   document.getElementById('pay-mes-index').value = mesIndex;
   document.getElementById('pay-ano-ref').value = ano;
   
-  // Garante a exibição do nome em branco e legível
+  // Nome e Mês em destaque branco
   const elNome = document.getElementById('pay-aluno-nome');
   const elMes = document.getElementById('pay-mes-nome');
   
@@ -131,7 +143,28 @@ window.abrirPagamento = function(alunoId, mesIndex, ano) {
     elMes.style.fontWeight = "bold";
   }
 
+  // Preenche o valor sugerido na div
+  const elValorSugerido = document.getElementById('pay-valor-sugerido');
+  if (elValorSugerido) {
+    elValorSugerido.textContent = valorFormatado;
+  }
+
+  // Preenche o campo de input com o valor sugerido
+  const campoValorPago = document.getElementById('pay-valor-real');
+  if (campoValorPago) {
+    campoValorPago.value = valorFormatado;
+  }
+
   document.getElementById('pay-data-pagamento').value = dataHojeStr;
+
+  // Mostra o botão de cancelar apenas se o mês já estiver pago
+  const todasMensalidades = getMensalidades();
+  const regAtual = todasMensalidades[alunoId]?.[ano]?.[mesIndex];
+  const btnEstornar = document.getElementById('btn-estornar-pagamento');
+  
+  if (btnEstornar) {
+    btnEstornar.style.display = (regAtual && regAtual.status === 'PAGO') ? 'block' : 'none';
+  }
 
   const modal = document.getElementById('modal-pagamento');
   if (modal) modal.classList.add('active');
@@ -151,7 +184,7 @@ function processarPagamento(e) {
   const mesIndex = document.getElementById('pay-mes-index').value;
   const ano = document.getElementById('pay-ano-ref').value;
   
-  // Converte a string "R$ 150,00" de volta para número float (150.00)
+  // Converte "R$ 150,00" para float (150.00)
   const valorInput = document.getElementById('pay-valor-real').value;
   const valorPago = parseFloat(valorInput.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
 
@@ -171,13 +204,37 @@ function processarPagamento(e) {
 }
 
 // ==========================================================================
-// FUNÇÃO AUXILIAR: MÁSCARA DE MOEDA (R$)
+// CANCELAR / ESTORNAR PAGAMENTO
+// ==========================================================================
+function cancelarPagamento() {
+  const alunoId = document.getElementById('pay-aluno-id').value;
+  const mesIndex = document.getElementById('pay-mes-index').value;
+  const ano = document.getElementById('pay-ano-ref').value;
+
+  if (!confirm("Tem certeza que deseja cancelar o registro deste pagamento? O mês voltará a ficar pendente.")) {
+    return;
+  }
+
+  salvarMensalidade(alunoId, ano, mesIndex, {
+    status: 'PENDENTE',
+    valorPago: 0,
+    dataPagamento: null,
+    formaPagamento: null,
+    dataRegistro: new Date().toISOString()
+  });
+
+  fecharModalPagamento();
+  renderizarMensalidades();
+}
+
+// ==========================================================================
+// MÁSCARA DE MOEDA (R$)
 // ==========================================================================
 export function aplicarMascaraMoeda(input) {
   if (!input) return;
   
   input.addEventListener("input", (e) => {
-    let value = e.target.value.replace(/\D/g, ""); // Remove o que não é dígito
+    let value = e.target.value.replace(/\D/g, "");
     if (!value) {
       e.target.value = "";
       return;

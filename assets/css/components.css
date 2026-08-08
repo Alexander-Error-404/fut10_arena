@@ -234,13 +234,13 @@
 .modal-content {
   background-color: #0b2545;
   width: 100%;
-  max-height: 88vh; /* Ocupa até 88% da altura da tela */
+  max-height: 75vh; /* Ocupa até 88% da altura da tela */
   border-radius: 20px 20px 0 0;
-  padding: 15px 15px 30px 15px; /* Espaçamento interno ajustado */
+  padding: 15px 15px 80px 15px; /* Espaçamento interno ajustado */
   overflow-y: auto; /* Permite rolar os campos */
   box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6);
   box-sizing: border-box;
-}
+}   
 
 /* Cabeçalho do Modal */
 .modal-header {
